@@ -525,7 +525,7 @@
           
           const imgHtml = notesDataRaw.imagePrompt 
             ? `<div class="notes-infographic-container no-print" style="margin-bottom: 24px; border-radius: 8px; overflow: hidden; border: 1px solid var(--color-hairline); box-shadow: var(--shadow-sm);">
-                 <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(notesDataRaw.imagePrompt)}?width=1024&height=576&nologo=true&seed=${notesDataRaw.videoId}" alt="AI Infographic" style="width: 100%; height: auto; display: block;" />
+                 <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(notesDataRaw.imagePrompt)}?width=1024&height=576&nologo=true&seed=${notesDataRaw.videoId}" alt="AI Infographic" style="width: 100%; height: auto; display: block;" onerror="this.closest('.notes-infographic-container').style.display='none'" />
                </div>`
             : '';
             
@@ -1201,7 +1201,7 @@
         <span class="pdf-cover-tag">COMPLETE STUDY BUNDLE</span>
         <h1 class="pdf-cover-title">${pageTitle}</h1>
         ${notesDataRaw.imagePrompt ? `
-          <img class="pdf-cover-image" src="https://image.pollinations.ai/prompt/${encodeURIComponent(notesDataRaw.imagePrompt)}?width=1024&height=576&nologo=true&seed=${notesDataRaw.videoId}" alt="AI Infographic" />
+          <img class="pdf-cover-image" src="https://image.pollinations.ai/prompt/${encodeURIComponent(notesDataRaw.imagePrompt)}?width=1024&height=576&nologo=true&seed=${notesDataRaw.videoId}" alt="AI Infographic" onerror="this.style.display='none'" />
         ` : ''}
         <div class="pdf-cover-meta">
           <span><strong>Format:</strong> Detailed Notes, Summary, Flashcards, Mind Map</span>

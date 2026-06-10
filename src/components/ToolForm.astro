@@ -1,0 +1,690 @@
+---
+---
+<section class="hero-section no-print">
+  <div class="container hero-container">
+    <div class="hero-text-content">
+      <span class="eyebrow">AI-Powered Note Generator</span>
+      <h1 class="hero-title">Turn Any YouTube Video Into Smart Notes — Free</h1>
+      <p class="hero-subtitle">
+        Paste a YouTube link. Get structured study notes, summaries, mind maps, or interactive flashcards in seconds.
+      </p>
+      
+      <!-- Trust Badges -->
+      <div class="trust-badges">
+        <div class="trust-badge">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--color-accent-green)" stroke-width="2.5" fill="none">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          No Signup Required
+        </div>
+        <div class="trust-badge">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--color-accent-green)" stroke-width="2.5" fill="none">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          100% Free
+        </div>
+        <div class="trust-badge">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--color-accent-green)" stroke-width="2.5" fill="none">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Multi-Language
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Interface -->
+    <div class="form-card card card-elevated">
+      <form id="notes-form" class="notes-form">
+        <!-- YouTube URL Input -->
+        <div class="form-group">
+          <label for="youtube-url" class="form-label">YouTube Video URL</label>
+          <div class="input-wrapper">
+            <input 
+              type="url" 
+              id="youtube-url" 
+              class="text-input" 
+              placeholder="Paste YouTube URL here (e.g. https://www.youtube.com/watch?v=...)" 
+            />
+            <span id="url-error" class="input-helper-error"></span>
+          </div>
+        </div>
+
+        <!-- Manual Paste Accordion -->
+        <details id="manual-paste-details" class="manual-details">
+          <summary class="manual-summary">
+            <span>Cannot fetch automatically? Paste transcript manually</span>
+            <svg class="summary-arrow" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </summary>
+          <div class="manual-content">
+            <ol class="manual-steps">
+              <li>Open the YouTube video in your browser.</li>
+              <li>Click <strong>"... More"</strong> in the description box under the video.</li>
+              <li>Click <strong>"Show transcript"</strong> (you may need to scroll down).</li>
+              <li>Select and copy all transcript text, and paste it into the box below.</li>
+            </ol>
+            <textarea 
+              id="manual-transcript" 
+              class="text-input" 
+              rows="5" 
+              placeholder="Paste transcript text here (timestamps will be cleaned automatically)..."
+            ></textarea>
+          </div>
+        </details>
+
+        <!-- Configuration Settings: Style & Language Grid -->
+        <div class="config-grid">
+          <!-- Style Select Cards -->
+          <div class="form-group style-group">
+            <label class="form-label">Choose Note Style</label>
+            <div class="style-cards-grid">
+              <label class="style-card active" data-style="detailed">
+                <input type="radio" name="note-style" value="detailed" checked class="sr-only" />
+                <div class="style-card-icon border-purple">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--color-accent-purple)" stroke-width="2" fill="none">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+                <div class="style-card-text">
+                  <span class="style-title">Detailed Notes</span>
+                  <span class="style-desc">Complete guide with topics, bullets, terms</span>
+                </div>
+              </label>
+
+              <label class="style-card" data-style="summary">
+                <input type="radio" name="note-style" value="summary" class="sr-only" />
+                <div class="style-card-icon border-blue">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--color-accent-blue)" stroke-width="2" fill="none">
+                    <line x1="21" y1="9" x2="3" y2="9"></line>
+                    <line x1="21" y1="15" x2="3" y2="15"></line>
+                    <line x1="12" y1="3" x2="12" y2="21"></line>
+                  </svg>
+                </div>
+                <div class="style-card-text">
+                  <span class="style-title">Quick Summary</span>
+                  <span class="style-desc">TL;DR summary with max 10 key bullet points</span>
+                </div>
+              </label>
+
+              <label class="style-card" data-style="flashcards">
+                <input type="radio" name="note-style" value="flashcards" class="sr-only" />
+                <div class="style-card-icon border-orange">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--color-accent-orange)" stroke-width="2" fill="none">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="9" y1="9" x2="15" y2="9"></line>
+                    <line x1="9" y1="13" x2="15" y2="13"></line>
+                    <line x1="9" y1="17" x2="13" y2="17"></line>
+                  </svg>
+                </div>
+                <div class="style-card-text">
+                  <span class="style-title">Study Flashcards</span>
+                  <span class="style-desc">Q&A card pairs perfect for reviewing concepts</span>
+                </div>
+              </label>
+
+              <label class="style-card" data-style="mindmap">
+                <input type="radio" name="note-style" value="mindmap" class="sr-only" />
+                <div class="style-card-icon border-pink">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--color-accent-pink)" stroke-width="2" fill="none">
+                    <line x1="18" y1="3" x2="12" y2="9"></line>
+                    <line x1="12" y1="15" x2="18" y2="21"></line>
+                    <line x1="6" y1="12" x2="2" y2="12"></line>
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <circle cx="20" cy="3" r="2"></circle>
+                    <circle cx="20" cy="21" r="2"></circle>
+                    <circle cx="2" cy="12" r="2"></circle>
+                  </svg>
+                </div>
+                <div class="style-card-text">
+                  <span class="style-title">Visual Mind Map</span>
+                  <span class="style-desc">Hierarchical structured conceptual map</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Language Selection -->
+          <div class="form-group lang-group">
+            <label for="language-select" class="form-label">Output Language</label>
+            <select id="language-select" class="select-input w-full">
+              <option value="en" selected>English</option>
+              <option value="auto">Detect Video Language (Auto)</option>
+              <option value="hi">Hindi (हिन्दी)</option>
+              <option value="es">Spanish (Español)</option>
+              <option value="fr">French (Français)</option>
+              <option value="de">German (Deutsch)</option>
+              <option value="it">Italian (Italiano)</option>
+              <option value="pt">Portuguese (Português)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="submit-btn" class="btn btn-primary btn-large w-full">
+          <span>Generate Smart Notes</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Active Progress Loader -->
+      <div id="loader-wrapper" class="loader-wrapper">
+        <div class="loader-header">
+          <span id="loader-status" class="loader-status">Fetching Video Details...</span>
+          <span id="loader-percent" class="loader-percent">15%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="progress-bar-fill" class="progress-bar-fill" style="width: 15%;"></div>
+        </div>
+        <p class="loader-tips">This typically takes 10-25 seconds depending on length.</p>
+      </div>
+
+      <!-- Error Card -->
+      <div id="error-card" class="error-card">
+        <div class="error-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <div class="error-text">
+          <h4 id="error-title">Generation Failed</h4>
+          <p id="error-message">YouTube transcript scraper failed. Try pasting the transcript manually.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    padding: var(--spacing-3xl) 0 var(--spacing-xl) 0;
+  }
+
+  .hero-container {
+    display: grid;
+    grid-template-columns: 1.12fr 1fr;
+    gap: var(--spacing-3xl);
+    align-items: center;
+  }
+
+  .hero-text-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-title {
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+    color: var(--color-body);
+    line-height: 1.5;
+    margin-bottom: var(--spacing-2xl);
+    max-width: 520px;
+  }
+
+  .trust-badges {
+    display: flex;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+  }
+
+  .trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--color-body-mid);
+  }
+
+  .form-card {
+    padding: var(--spacing-3xl);
+  }
+
+  .notes-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  .input-helper-error {
+    font-size: 12px;
+    color: var(--color-accent-red);
+    display: block;
+    margin-top: 4px;
+  }
+
+  /* Manual details accordion */
+  .manual-details {
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--rounded-sm);
+    overflow: hidden;
+  }
+
+  .manual-summary {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--color-canvas);
+    color: var(--color-body-mid);
+    font-size: 13.5px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+  }
+
+  .manual-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .summary-arrow {
+    transition: transform var(--transition-fast);
+  }
+
+  .manual-details[open] .summary-arrow {
+    transform: rotate(180deg);
+  }
+
+  .manual-content {
+    padding: var(--spacing-lg);
+    border-top: 1px solid var(--color-hairline);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .manual-steps {
+    font-size: 13px;
+    padding-left: var(--spacing-lg);
+    color: var(--color-body-mid);
+    line-height: 1.5;
+  }
+
+  .manual-steps li {
+    margin-bottom: 4px;
+  }
+
+  .config-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  .style-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .style-card {
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--rounded-md);
+    padding: var(--spacing-md);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    user-select: none;
+  }
+
+  .style-card:hover {
+    border-color: var(--color-mute);
+    transform: translateY(-1px);
+  }
+
+  .style-card.active {
+    border-color: var(--color-ink);
+    box-shadow: var(--shadow-sm);
+    background-color: rgba(8, 8, 8, 0.01);
+  }
+
+  html[data-theme="dark"] .style-card.active {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+
+  .style-card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--rounded-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background-color: var(--color-canvas);
+    border: 1px solid var(--color-hairline);
+  }
+
+  .border-purple { border-color: rgba(122, 61, 255, 0.2); }
+  .border-blue { border-color: rgba(59, 137, 255, 0.2); }
+  .border-orange { border-color: rgba(255, 107, 0, 0.2); }
+  .border-pink { border-color: rgba(237, 82, 203, 0.2); }
+
+  .style-card.active .border-purple { background-color: rgba(122, 61, 255, 0.05); }
+  .style-card.active .border-blue { background-color: rgba(59, 137, 255, 0.05); }
+  .style-card.active .border-orange { background-color: rgba(255, 107, 0, 0.05); }
+  .style-card.active .border-pink { background-color: rgba(237, 82, 203, 0.05); }
+
+  .style-card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .style-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .style-desc {
+    font-size: 11px;
+    color: var(--color-body-mid);
+    line-height: 1.3;
+  }
+
+  .btn-large {
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .w-full {
+    width: 100%;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  /* Loader Styles */
+  .loader-wrapper {
+    display: none;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .loader-wrapper.active {
+    display: flex;
+  }
+
+  .loader-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+
+  .progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background-color: var(--color-hairline);
+    border-radius: var(--rounded-full);
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background-color: var(--color-accent-purple);
+    border-radius: var(--rounded-full);
+    transition: width 0.4s ease;
+  }
+
+  .loader-tips {
+    font-size: 11.5px;
+    color: var(--color-mute);
+    text-align: center;
+  }
+
+  /* Error Card */
+  .error-card {
+    display: none;
+    background-color: rgba(238, 29, 54, 0.03);
+    border: 1px solid rgba(238, 29, 54, 0.2);
+    border-radius: var(--rounded-sm);
+    padding: var(--spacing-lg);
+    gap: var(--spacing-md);
+    color: var(--color-accent-red);
+  }
+
+  .error-card.active {
+    display: flex;
+  }
+
+  .error-icon {
+    flex-shrink: 0;
+  }
+
+  .error-text h4 {
+    color: var(--color-accent-red);
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .error-text p {
+    font-size: 12.8px;
+    color: var(--color-body);
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 991px) {
+    .hero-container {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-2xl);
+    }
+
+    .hero-title {
+      font-size: 36px;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .style-cards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  // Setup Style Card Selection Logic
+  const styleCards = document.querySelectorAll('.style-card');
+  styleCards.forEach(card => {
+    card.addEventListener('click', () => {
+      // Deactivate all
+      styleCards.forEach(c => c.classList.remove('active'));
+      // Activate clicked
+      card.classList.add('active');
+      const radioInput = card.querySelector('input[type="radio"]') as HTMLInputElement;
+      if (radioInput) radioInput.checked = true;
+    });
+  });
+
+  // Form Submission Logic
+  const form = document.getElementById('notes-form') as HTMLFormElement;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const loaderWrapper = document.getElementById('loader-wrapper') as HTMLDivElement;
+  const errorCard = document.getElementById('error-card') as HTMLDivElement;
+  const errorTitle = document.getElementById('error-title') as HTMLHeadingElement;
+  const errorMessage = document.getElementById('error-message') as HTMLParagraphElement;
+  const urlError = document.getElementById('url-error') as HTMLSpanElement;
+
+  const loaderStatus = document.getElementById('loader-status') as HTMLSpanElement;
+  const loaderPercent = document.getElementById('loader-percent') as HTMLSpanElement;
+  const progressBarFill = document.getElementById('progress-bar-fill') as HTMLDivElement;
+
+  let progressInterval: number;
+
+  function updateProgress(status: string, percent: number) {
+    if (loaderStatus) loaderStatus.textContent = status;
+    if (loaderPercent) loaderPercent.textContent = `${percent}%`;
+    if (progressBarFill) progressBarFill.style.width = `${percent}%`;
+  }
+
+  function simulateProgress() {
+    let currentPercent = 5;
+    updateProgress("Parsing YouTube video information...", currentPercent);
+
+    progressInterval = window.setInterval(() => {
+      if (currentPercent < 40) {
+        currentPercent += Math.floor(Math.random() * 5) + 2;
+        updateProgress("Fetching video transcriptions...", currentPercent);
+      } else if (currentPercent < 75) {
+        currentPercent += Math.floor(Math.random() * 3) + 1;
+        updateProgress("Cleaning & compressing content...", currentPercent);
+      } else if (currentPercent < 95) {
+        currentPercent += 1;
+        updateProgress("AI is analyzing & compiling study notes...", currentPercent);
+      }
+    }, 1200);
+  }
+
+  function validateYouTubeUrl(url: string): boolean {
+    const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/;
+    return regex.test(url);
+  }
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const youtubeUrlInput = document.getElementById('youtube-url') as HTMLInputElement;
+      const manualTranscriptInput = document.getElementById('manual-transcript') as HTMLTextAreaElement;
+      const selectedStyleInput = document.querySelector('input[name="note-style"]:checked') as HTMLInputElement;
+      const languageSelect = document.getElementById('language-select') as HTMLSelectElement;
+
+      const url = youtubeUrlInput ? youtubeUrlInput.value.trim() : '';
+      const manualTranscript = manualTranscriptInput ? manualTranscriptInput.value.trim() : '';
+      const noteStyle = selectedStyleInput ? selectedStyleInput.value : 'detailed';
+      const language = languageSelect ? languageSelect.value : 'auto';
+
+      // Reset errors & loader
+      if (urlError) urlError.textContent = '';
+      if (errorCard) errorCard.classList.remove('active');
+      
+      // Validate inputs
+      if (!url && !manualTranscript) {
+        if (urlError) urlError.textContent = 'Please enter a YouTube URL or paste a transcript manually.';
+        return;
+      }
+
+      if (url && !validateYouTubeUrl(url)) {
+        if (urlError) urlError.textContent = 'Please enter a valid YouTube video URL.';
+        return;
+      }
+
+      // Show loader
+      if (form) form.style.display = 'none';
+      if (loaderWrapper) loaderWrapper.classList.add('active');
+      simulateProgress();
+
+      // Retrieve custom API keys if present in localStorage
+      const customApiKey = localStorage.getItem('custom_gemini_api_key') || '';
+      const customGroqApiKey = localStorage.getItem('custom_groq_api_key') || '';
+
+      try {
+        const response = await fetch('/api/generate-notes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            url,
+            manualTranscript,
+            noteStyle,
+            language,
+            customApiKey,
+            customGroqApiKey
+          })
+        });
+
+        clearInterval(progressInterval);
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Server error generating notes.');
+        }
+
+        updateProgress("Generation completed!", 100);
+        
+        // Hide loader & restore form
+        setTimeout(() => {
+          if (loaderWrapper) loaderWrapper.classList.remove('active');
+          if (form) form.style.display = 'flex';
+          
+          // Trigger event with notes data
+          window.dispatchEvent(new CustomEvent('notes-generated', {
+            detail: {
+              notes: data.notes,
+              videoId: data.videoId,
+              noteStyle: noteStyle,
+              url: url
+            }
+          }));
+        }, 500);
+
+      } catch (err: any) {
+        clearInterval(progressInterval);
+        if (loaderWrapper) loaderWrapper.classList.remove('active');
+        if (form) form.style.display = 'flex';
+        
+        if (errorCard) {
+          errorCard.classList.add('active');
+          if (err.message === 'RATE_LIMIT_BLOCKED') {
+            if (errorTitle) errorTitle.textContent = "Scraping Blocked by YouTube";
+            if (errorMessage) errorMessage.innerHTML = "YouTube is currently blocking our automated scraper. <br/><strong>Solution:</strong> Expand the 'Paste transcript manually' section above and paste the transcript there to proceed instantly!";
+            // Auto open the details element to guide the user
+            const detailsElement = document.getElementById('manual-paste-details') as HTMLDetailsElement;
+            if (detailsElement) detailsElement.open = true;
+          } else {
+            if (errorTitle) errorTitle.textContent = "Generation Error";
+            if (errorMessage) errorMessage.textContent = err.message || "An unexpected error occurred. Please try again.";
+          }
+        }
+      }
+    });
+  }
+</script>

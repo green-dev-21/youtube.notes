@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Privacy Policy — YouTube to Notes AI"
+  description="Read the privacy policy for YouTube to Notes AI. Learn how we handle your data and cookie utilization."
+>
+  <section class="section">
+    <div class="container" style="max-width: 800px; margin: 0 auto; padding-top: var(--spacing-2xl);">
+      <span class="eyebrow">LEGAL POLICY</span>
+      <h1 style="font-size: 38px; margin-bottom: var(--spacing-lg);">Privacy Policy</h1>
+      
+      <div class="card" style="margin-top: var(--spacing-xl); display: flex; flex-direction: column; gap: var(--spacing-lg); font-size: 15px; line-height: 1.6; color: var(--color-body);">
+        <p><em>Last Updated: June 10, 2026</em></p>
+        
+        <p>
+          At YouTube to Notes AI, available at youtubetonotes.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by YouTube to Notes AI and how we use it.
+        </p>
+
+        <h3 style="font-size: 20px; color: var(--color-ink); margin-top: var(--spacing-sm);">1. Consent</h3>
+        <p>
+          By using our website, you hereby consent to our Privacy Policy and agree to its terms.
+        </p>
+
+        <h3 style="font-size: 20px; color: var(--color-ink); margin-top: var(--spacing-sm);">2. Information We Collect</h3>
+        <p>
+          <strong>Input Data:</strong> When you enter a YouTube URL or paste a transcript in our generator, this information is processed in real-time by our serverless API to fetch transcripts and interact with the Google Gemini AI. We do <strong>not</strong> save, log, or store your YouTube URLs, video transcripts, or generated notes on our servers. Once the request is completed, the text data is cleared from our execution environment memory.
+        </p>
+        <p>
+          <strong>Custom API Keys:</strong> If you input a custom Google Gemini API key in the settings menu, it is stored strictly in your browser's local cache (localStorage). It is never sent to our servers or stored in our databases. It is only read directly by your browser when building requests.
+        </p>
+
+        <h3 style="font-size: 20px; color: var(--color-ink); margin-top: var(--spacing-sm);">3. Google DoubleClick DART Cookie</h3>
+        <p>
+          Google is one of the third-party vendors on our site. It uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to youtubetonotes.com and other sites on the internet. However, visitors may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy at the following URL: <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer" style="color: var(--color-accent-blue-deep);">https://policies.google.com/technologies/ads</a>
+        </p>
+
+        <h3 style="font-size: 20px; color: var(--color-ink); margin-top: var(--spacing-sm);">4. Advertisers and Analytics Partners</h3>
+        <p>
+          We may partner with third-party advertising partners (such as Google AdSense) and analytical services (such as Google Analytics). These partners use technologies like cookies, JavaScript, or Web Beacons that are sent directly to users' browsers, automatically receiving your IP address when this occurs. These tools are used to measure the effectiveness of their advertising campaigns and/or to personalize the advertising content that you see.
+        </p>
+        <p>
+          Note that YouTube to Notes AI has no access to or control over these cookies that are used by third-party advertisers.
+        </p>
+
+        <h3 style="font-size: 20px; color: var(--color-ink); margin-top: var(--spacing-sm);">5. Children's Information</h3>
+        <p>
+          Another part of our priority is adding protection for children while using the internet. We encourage parents and guardians to observe, participate in, and/or monitor and guide their online activity.
+        </p>
+        <p>
+          YouTube to Notes AI does not knowingly collect any Personal Identifiable Information from children under the age of 13. If you think that your child provided this kind of information on our website, we strongly encourage you to contact us immediately and we will do our best efforts to promptly remove such information from our records.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

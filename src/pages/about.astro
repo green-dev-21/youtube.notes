@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About Us — YouTube to Notes AI"
+  description="Learn about our mission to help students and professionals convert YouTube videos to structured notes using AI."
+>
+  <section class="section">
+    <div class="container" style="max-width: 800px; margin: 0 auto; padding-top: var(--spacing-2xl);">
+      <span class="eyebrow">OUR MISSION</span>
+      <h1 style="font-size: 38px; margin-bottom: var(--spacing-lg);">About YouTube to Notes AI</h1>
+      
+      <div class="card" style="margin-top: var(--spacing-xl); display: flex; flex-direction: column; gap: var(--spacing-lg);">
+        <p style="font-size: 16px; line-height: 1.7; color: var(--color-body);">
+          <strong>YouTube to Notes AI</strong> is a free productivity tool created for students, self-taught developers, researchers, and lifelong learners. We believe that YouTube contains some of the highest-quality educational content in the world, but passive video watching is a slow and inefficient way to learn. 
+        </p>
+        
+        <p style="font-size: 16px; line-height: 1.7; color: var(--color-body);">
+          Our mission is to help you transform passive video viewing into active learning. By instantly converting video transcripts into structured detailed notes, quick TL;DR summaries, interactive flashcards, and hierarchical mind maps, we give your brain the structured resources it needs for active recall and long-term retention.
+        </p>
+
+        <h3 style="font-size: 20px; color: var(--color-ink); margin-top: var(--spacing-sm);">Why We are Different</h3>
+        <p style="font-size: 15px; color: var(--color-body); line-height: 1.6;">
+          Most YouTube summarization tools enforce strict limits, force you to sign up for accounts, clutter their screens with annoying pop-up ads, or only provide a single block of plain text. We set out to build a premium, developer-grade alternative:
+        </p>
+        
+        <ul style="padding-left: 20px; font-size: 15px; color: var(--color-body); display: flex; flex-direction: column; gap: 8px;">
+          <li><strong>Zero Signup:</strong> Use the tool instantly. No registration, no login gates, no credit cards.</li>
+          <li><strong>Four Note Styles:</strong> Get study materials in the format your brain prefers (Detailed notes, Quick bulleted summaries, Q&A flashcards, or visual mind maps).</li>
+          <li><strong>Offline Printing:</strong> The print/PDF action is styled to hide all website controls, giving you a perfectly formatted document for physical printing or iPad reading.</li>
+          <li><strong>Manual Fallback option:</strong> If YouTube blocks our automated crawler, you can paste transcripts manually to keep working.</li>
+        </ul>
+
+        <h3 style="font-size: 20px; color: var(--color-ink); margin-top: var(--spacing-sm);">The Technology</h3>
+        <p style="font-size: 15px; color: var(--color-body); line-height: 1.6;">
+          This application is built for maximum speed and optimization. It is styled with <strong>Webflow's design tokens</strong> (utilizing elegant near-black inks and harmonious category layouts) and constructed as a Multi-Page Application (MPA) using <strong>AstroJS</strong>. All serverless endpoints run directly on <strong>Cloudflare Pages Edge Workers</strong>, and note compilation is powered by <strong>advanced AI models</strong>.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

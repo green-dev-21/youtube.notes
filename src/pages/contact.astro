@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Contact Us — YouTube to Notes AI"
+  description="Have questions or feedback? Get in touch with the YouTube to Notes AI support team."
+>
+  <section class="section">
+    <div class="container" style="max-width: 600px; margin: 0 auto; padding-top: var(--spacing-2xl);">
+      <span class="eyebrow">GET IN TOUCH</span>
+      <h1 style="font-size: 38px; margin-bottom: var(--spacing-lg);">Contact Us</h1>
+      
+      <div class="card card-elevated" style="margin-top: var(--spacing-xl);">
+        <p style="font-size: 15px; color: var(--color-body); line-height: 1.6; margin-bottom: var(--spacing-lg);">
+          Have questions, feature suggestions, or business inquiries? Drop us a message below or reach out directly at <a href="mailto:support@youtubetonotes.com" style="color: var(--color-accent-blue-deep); font-weight: 500;">support@youtubetonotes.com</a>. We usually reply within 24-48 hours.
+        </p>
+
+        <form id="contact-form" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+          <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+            <label for="contact-name" style="font-size: 13.5px; font-weight: 500; color: var(--color-ink);">Your Name</label>
+            <input type="text" id="contact-name" class="text-input" placeholder="Enter your name" required />
+          </div>
+
+          <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+            <label for="contact-email" style="font-size: 13.5px; font-weight: 500; color: var(--color-ink);">Email Address</label>
+            <input type="email" id="contact-email" class="text-input" placeholder="you@example.com" required />
+          </div>
+
+          <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+            <label for="contact-message" style="font-size: 13.5px; font-weight: 500; color: var(--color-ink);">Message</label>
+            <textarea id="contact-message" class="text-input" rows="5" placeholder="Write your message here..." required></textarea>
+          </div>
+
+          <button type="submit" id="contact-submit" class="btn btn-primary" style="margin-top: var(--spacing-xs); width: 100%;">
+            Send Message
+          </button>
+        </form>
+
+        <div id="contact-success" class="badge badge-info-soft" style="display: none; width: 100%; justify-content: center; padding: 12px; font-size: 13px; margin-top: var(--spacing-md);">
+          ✓ Thank you! Your message has been sent. We'll get back to you soon.
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('contact-form');
+  const successMsg = document.getElementById('contact-success');
+
+  if (form && successMsg) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      form.style.display = 'none';
+      successMsg.style.display = 'flex';
+    });
+  }
+</script>

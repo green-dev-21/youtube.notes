@@ -1,0 +1,53 @@
+====================================================================
+               YT TO NOTES AI: MANUAL SETUP CHECKLIST
+====================================================================
+
+Because I cannot access external accounts, register domains, or edit 
+credentials, you will need to perform these steps manually to make the 
+project production-ready and live online.
+
+--------------------------------------------------------------------
+STEP 1: GET A FREE GOOGLE GEMINI API KEY
+--------------------------------------------------------------------
+1. Go to Google AI Studio: https://aistudio.google.com/
+2. Click "Get API Key" -> Create API Key -> Choose a project.
+3. Copy the key (it starts with "AIzaSy...").
+4. For local testing, create a file named `.env` in the project root:
+   GEMINI_API_KEY=your_actual_key_here
+5. Note: Users can also use their own keys via the gear settings 
+   icon in the header.
+
+--------------------------------------------------------------------
+STEP 2: ACQUIRE GRAPHICAL ASSETS
+--------------------------------------------------------------------
+1. Logo & Favicon:
+   - Generate a favicon from a tool like https://logofa.st/ or similar.
+   - Go to https://realfavicongenerator.net/ to convert the icon.
+   - Download the package and place `favicon.ico` in the "/public" directory.
+2. Open Graph Staging Image:
+   - Create a 1200x630 image in Canva showing the tool name ("YouTube to Notes AI") and a simple screenshot of the UI.
+   - Save it as `og-image.png` and place it in the "/public" directory.
+
+--------------------------------------------------------------------
+STEP 3: DEPLOY ON CLOUDFLARE PAGES
+--------------------------------------------------------------------
+1. Push your repository to GitHub.
+2. Go to your Cloudflare Dashboard (https://dash.cloudflare.com/) and navigate to Pages.
+3. Click "Create a project" -> "Connect to Git" and select your repository.
+4. Set the Build settings:
+   - Framework preset: Astro
+   - Build command: npm run build
+   - Output directory: dist
+5. Before deploying, add Environment Variables:
+   - Go to Settings -> Environment Variables.
+   - Click "Add Variable" and set Name: GEMINI_API_KEY, Value: [Your Gemini API Key from Step 1].
+6. Click "Save and Deploy".
+
+--------------------------------------------------------------------
+STEP 4: SETUP CUSTOM DOMAIN & ANALYTICS
+--------------------------------------------------------------------
+1. Buy `youtubetonotes.com` on Hostinger, Namecheap, or GoDaddy.
+2. In the Cloudflare Pages project page, click "Custom domains" -> "Set up a custom domain" -> Enter your domain.
+3. If using Google Analytics, go to Google Analytics (https://analytics.google.com/), create a GA4 tag, and paste the tracking script inside the `<head>` of `/src/layouts/BaseLayout.astro` where indicated.
+4. Submit your domain to Google Search Console (https://search.google.com/search-console/) and Bing Webmaster Tools to start ranking.
+====================================================================

@@ -1,0 +1,147 @@
+---
+---
+<footer class="footer no-print">
+  <div class="container footer-container">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <img src="/icon.png" alt="Logo" class="logo-icon" style="width: 24px; height: 24px; object-fit: contain; border-radius: 4px;" />
+        <span class="logo-text" style="font-size: 16px; font-weight: 600; color: var(--color-ink);">YT to Notes AI</span>
+      </div>
+      <p class="footer-desc">
+        Turn any YouTube video or lecture into beautiful, structured, study-ready notes in seconds. Powered by AI.
+      </p>
+
+      <!-- Trust Badges inside Footer -->
+      <div class="footer-badges">
+        <span class="badge badge-info-soft">No Signup Required</span>
+        <span class="badge badge-info-soft">100% Free</span>
+        <span class="badge badge-info-soft">AI Powered</span>
+      </div>
+    </div>
+
+    <div class="footer-links-grid">
+      <div class="links-col">
+        <span class="eyebrow-sm">Application</span>
+        <a href="/" class="footer-link">Notes Generator</a>
+        <a href="/blog" class="footer-link">Articles & Blog</a>
+        <a href="/#faq" class="footer-link">Frequently Asked Questions</a>
+      </div>
+
+      <div class="links-col">
+        <span class="eyebrow-sm">Legal Pages</span>
+        <a href="/privacy-policy" class="footer-link">Privacy Policy</a>
+        <a href="/terms-of-service" class="footer-link">Terms of Service</a>
+        <a href="/sitemap.xml" class="footer-link">Sitemap</a>
+      </div>
+
+      <div class="links-col">
+        <span class="eyebrow-sm">Contact & Help</span>
+        <a href="/about" class="footer-link">About Us</a>
+        <a href="/contact" class="footer-link">Support & Contact</a>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="footer-link">Github</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p class="copyright">
+      &copy; {new Date().getFullYear()} YT to Notes AI (youtubetonotes.com). All rights reserved. YouTube is a trademark of Google LLC.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--color-canvas);
+    border-top: 1px solid var(--color-hairline);
+    padding: var(--spacing-3xl) 0 var(--spacing-xl) 0;
+    transition: background-color var(--transition-normal), border-color var(--transition-normal);
+  }
+
+  .footer-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--spacing-3xl);
+    margin-bottom: var(--spacing-3xl);
+  }
+
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  .footer-desc {
+    font-size: 14px;
+    color: var(--color-body-mid);
+    max-width: 320px;
+    line-height: 1.5;
+  }
+
+  .footer-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+  }
+
+  .footer-links-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-2xl);
+  }
+
+  .links-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .links-col .eyebrow-sm {
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-ink);
+  }
+
+  .footer-link {
+    font-size: 14px;
+    color: var(--color-body-mid);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .footer-link:hover {
+    color: var(--color-ink);
+  }
+
+  .footer-bottom {
+    border-top: 1px solid var(--color-hairline);
+    padding-top: var(--spacing-xl);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .copyright {
+    font-size: 12.8px;
+    color: var(--color-mute);
+    text-align: center;
+  }
+
+  @media (max-width: 767px) {
+    .footer-container {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-2xl);
+    }
+
+    .footer-links-grid {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-xl);
+    }
+  }
+</style>

@@ -1,0 +1,341 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ToolForm from '../components/ToolForm.astro';
+import NotesOutput from '../components/NotesOutput.astro';
+
+// FAQ items with answers
+const faqList = [
+  {
+    q: "Is YouTube to Notes AI completely free?",
+    a: "Yes, YouTube to Notes AI is 100% free to use. You do not need to register, create an account, or enter a credit card. We utilize the free tier of Google Gemini to keep our service running, and we also allow you to use your own API key for unlimited personal requests."
+  },
+  {
+    q: "How does YouTube to Notes AI work?",
+    a: "Our tool works in a three-step pipeline. First, we download the text transcript of the YouTube video using the video ID. Second, we clean the transcript by removing timestamps, bracketed tags, and repeated filler words. Third, we send the clean transcript to Gemini 2.0 Flash, which parses and structures it into detailed notes, bullet points, summaries, flashcards, or mind maps based on your choice."
+  },
+  {
+    q: "Can I convert a YouTube lecture to notes?",
+    a: "Absolutely! The tool is designed specifically for educational lectures, webinars, tutorials, and talk shows. Simply paste the lecture link, choose your preferred style, and hit generate. You will receive structured study notes in seconds."
+  },
+  {
+    q: "What AI model powers this tool?",
+    a: "This application is powered by Google Gemini 2.0 Flash. It is Google's latest high-performance, low-latency language model, providing rapid responses and exceptional reasoning for structuring text data."
+  },
+  {
+    q: "Can I download notes as PDF?",
+    a: "Yes. In the generated notes workspace, you can click 'Save PDF' or use the print control. We have styled a print-friendly view that automatically hides the rest of the website's headers and menus, rendering the notes in a clean, professional paper format that you can print or save as a PDF."
+  },
+  {
+    q: "Does this work for non-English YouTube videos?",
+    a: "Yes! Gemini 2.0 Flash is multilingual. You can choose to auto-detect the video language or manually specify the output language (English, Hindi, Spanish, French, German, Italian, Portuguese) in the generator form."
+  },
+  {
+    q: "How long can the YouTube video be?",
+    a: "We support videos up to 3 hours long. To conserve AI tokens, our backend automatically truncates transcripts above 30,000 words (which is equivalent to roughly 3 hours of continuous speech) while keeping the most critical parts."
+  },
+  {
+    q: "Is there a limit on how many videos I can convert?",
+    a: "Because we use Google's free tier, there is a global rate limit of 15 requests per minute. If you hit this limit, simply wait a minute and try again. Alternatively, you can click the gear icon in the header to input your own free Gemini API key for unlimited personal capacity."
+  },
+  {
+    q: "What is the difference between Detailed Notes and Quick Summary?",
+    a: "Detailed Notes compile a comprehensive outline with major topics, subsections, key definitions, action items, and takeaways. Quick Summary creates a compact TL;DR overview with a maximum of 10 scannable bullet points, which is great for deciding whether a video is worth watching."
+  },
+  {
+    q: "Can I use this as an AI note taker for studying?",
+    a: "Yes! YouTube to Notes AI is an excellent studying assistant. By converting lectures to notes, mind maps, and flippable flashcards, you can practice active recall and spaced repetition to master complex subjects quickly."
+  },
+  {
+    q: "How accurate are the AI-generated notes?",
+    a: "Since the notes are built directly from the words spoken in the video transcript, they are highly accurate. However, if the auto-generated captions on YouTube contain misspelled technical words, the AI may carry over those spelling errors. We recommend cross-referencing definitions for critical exams."
+  },
+  {
+    q: "Do I need to create an account?",
+    a: "No account is required. We do not require signups, nor do we save or track your conversion history on our servers. Your privacy is fully respected."
+  },
+  {
+    q: "Can I convert YouTube Shorts to notes?",
+    a: "Yes! You can copy the link of any YouTube Short and paste it into our input field. The generator will summarize it just like a regular video, though the output will naturally be shorter."
+  },
+  {
+    q: "How to convert YouTube video to notes for free?",
+    a: "To convert any YouTube video to notes, copy the URL of the video from your browser address bar. Paste it into the input box on our homepage, select your note style (Detailed, Summary, Flashcards, or Mind Map), choose your language, and click 'Generate Smart Notes'."
+  },
+  {
+    q: "What is an AI notes generator from YouTube video?",
+    a: "An AI notes generator is a software tool that uses speech-to-text transcripts and large language models (like Gemini) to summarize, format, and organize the audio content of a video into readable, educational text files like summaries and study sheets."
+  }
+];
+
+// Generate JSON-LD Schema string
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqList.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
+    }
+  }))
+};
+---
+
+<BaseLayout
+  title="YouTube to Notes AI — Free YouTube Video Notes Generator"
+  description="Convert any YouTube video to smart, structured notes for free. AI-powered note generator using Gemini. No signup needed. Try it now."
+>
+  <div slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </div>
+
+  <!-- Main Generator UI -->
+  <ToolForm />
+
+  <!-- Interactive Output Workspace (Hidden until load or generation) -->
+  <section class="section output-section">
+    <div class="container">
+      <div class="workspace-intro-bar no-print">
+        <span class="eyebrow-sm">WORKSPACE CANVAS</span>
+        <h2 style="font-size: 24px; font-weight: 600; color: var(--color-ink); margin-top: 4px;">Study Workspace</h2>
+      </div>
+      <NotesOutput />
+    </div>
+  </section>
+
+  <!-- Interactive Demo Button Banner -->
+  <section class="section demo-banner-section no-print">
+    <div class="container" style="text-align: center;">
+      <div class="card card-elevated" style="max-width: 600px; margin: 0 auto; padding: var(--spacing-2xl);">
+        <h3 style="font-size: 18px; margin-bottom: 8px; color: var(--color-ink);">New here? Try the Interactive Demo</h3>
+        <p style="font-size: 14px; color: var(--color-body-mid); margin-bottom: var(--spacing-lg);">
+          See how our Gemini-powered study sheets, interactive 3D flashcards, and hierarchical mind maps work without pasting a link.
+        </p>
+        <button id="load-demo-btn" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          Load Example Note (Feynman Technique)
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEO Content Section -->
+  <section class="section seo-content-section no-print">
+    <div class="container">
+      <div class="card" style="max-width: 900px; margin: 0 auto;">
+        <article class="markdown-body">
+          <span class="eyebrow">Comprehensive Guide</span>
+          <h2>How to Convert YouTube Videos into Study Notes: The Ultimate Guide</h2>
+          
+          <p>
+            With billions of hours of educational lectures, coding tutorials, and documentary videos uploaded to YouTube, the platform is arguably the world’s largest classroom. However, passive watching is one of the least effective ways to learn. To truly absorb information, you need structured, written notes that allow for active review, spaced repetition, and quick reference.
+          </p>
+          
+          <p>
+            That is where <strong>YouTube to Notes AI</strong> steps in. Using state-of-the-art generative artificial intelligence (Google Gemini 2.0 Flash), we help students, developers, and researchers convert raw audio transcripts into beautiful, readable study materials in seconds.
+          </p>
+
+          <h3>Why Use an AI Note Generator for Studying?</h3>
+          <p>
+            Writing notes manually while watching a lecture can cause you to lose focus, miss key remarks, or waste hours pausing and rewinding. Generating notes with AI offers several distinct advantages:
+          </p>
+          <ul>
+            <li><strong>Saves Hours of Time:</strong> A 1-hour university lecture can be summarized and structured into its core concepts in less than 20 seconds.</li>
+            <li><strong>Improves Active Recall:</strong> Our tool automatically generates interactive 3D study flashcards, enabling you to test yourself on key concepts instead of just reading.</li>
+            <li><strong>Enhances Concept Mapping:</strong> The mind map format lists hierarchical branches of information, helping your brain see how sub-points connect to main concepts.</li>
+            <li><strong>Enables Searchability:</strong> Text notes are fully searchable (Ctrl+F) and can be downloaded as a PDF for offline study apps like Obsidian, Notion, or Anki.</li>
+          </ul>
+
+          <h3>Step-by-Step: How to Use YouTube to Notes AI</h3>
+          <p>
+            Using our free AI note taker is straightforward. Follow these steps to get started:
+          </p>
+          <ol>
+            <li><strong>Copy the YouTube Link:</strong> Go to YouTube and copy the URL of the video you wish to summarize.</li>
+            <li><strong>Choose Your Format:</strong> Select one of the four formatting templates. Choose <em>Detailed Notes</em> for full breakdowns, <em>Quick Summary</em> for a high-level TL;DR, <em>Flashcards</em> for studying, or <em>Mind Map</em> for a clean conceptual hierarchy.</li>
+            <li><strong>Generate:</strong> Click the 'Generate Smart Notes' button. Our system extracts the transcript and compiles your workspace.</li>
+            <li><strong>Study and Export:</strong> Switch between tabs in your workspace. Adjust the text size, copy to clipboard, or download as a TXT or PDF file for printing.</li>
+          </ol>
+
+          <h3>Bypassing Scraper Restrictions with Manual Import</h3>
+          <p>
+            Occasionally, YouTube's automated systems rate-limit server-side scrapers, which can temporarily disable automatic transcript downloads. Unlike other tools that break completely when this happens, YouTube to Notes AI provides a robust <strong>manual transcript import</strong> fallback. Simply click 'Cannot fetch automatically?', follow the instructions to copy the transcript directly from the YouTube page, paste it into the text box, and let the AI structure it for you!
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Accordion FAQ Section -->
+  <section id="faq" class="section faq-section no-print">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: var(--spacing-3xl);">
+        <span class="eyebrow">Got Questions?</span>
+        <h2 style="font-size: 32px; font-weight: 600;">Frequently Asked Questions</h2>
+        <p style="color: var(--color-body-mid); margin-top: var(--spacing-sm);">Everything you need to know about the YouTube to Notes converter.</p>
+      </div>
+
+      <div class="faq-accordion-list" style="max-width: 800px; margin: 0 auto;">
+        {faqList.map((item, idx) => (
+          <details class="accordion-item" style="padding: 4px 0;">
+            <summary class="accordion-header">
+              <span>{item.q}</span>
+              <svg class="accordion-icon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </summary>
+            <div class="accordion-content">
+              <p style="margin: 0; color: var(--color-body); line-height: 1.6;">{item.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .output-section {
+    padding-top: 0;
+  }
+
+  .workspace-intro-bar {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .faq-accordion-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .accordion-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .accordion-item[open] .accordion-icon {
+    transform: rotate(180deg);
+  }
+</style>
+
+<script>
+  // Feynman Technique Demo Notes Payload
+  const feynmanDemoNotes = {
+    detailed: `# The Feynman Technique: How to Learn Anything Fast
+
+## 📌 Key Topics
+
+### Step 1: Choose a Concept
+Select a topic you want to understand and start studying it. Write down everything you know about it on a blank sheet of paper, and add to it each time you learn something new.
+
+### Step 2: Teach It to a Child
+Write an explanation of the concept on your paper as if you were teaching it to an 8-year-old child. Use simple language, short sentences, and avoid complex jargon.
+
+### Step 3: Identify Gaps in Your Understanding
+Identify the points where you struggle to explain the concept simply. Go back to your study materials, textbooks, or videos to fill in those gaps until you can explain it clearly.
+
+### Step 4: Simplify and Create Analogies
+Review your explanation, simplify the language further, and create analogies to connect the concept to common, easily understood ideas.
+
+## 🔑 Key Points
+- The Feynman Technique is a mental model for rapid learning and deep understanding.
+- It was named after Richard Feynman, a Nobel Prize-winning physicist known as the "Great Explainer".
+- Explaining a concept simply forces you to identify gaps in your knowledge.
+- Avoid jargon, as it often masks a lack of true understanding.
+
+## 💡 Important Definitions
+- **Richard Feynman**: Nobel Prize-winning physicist who developed this simple 4-step learning framework.
+- **Jargon**: Special words or expressions used by a profession or group that are difficult for others to understand.
+
+## ✅ Action Items
+- Write down a complex topic you are currently learning.
+- Try explaining it out loud in under 2 minutes using simple words.
+- List any terms you couldn't explain and read about them.`,
+    summary: `The Feynman Technique is a powerful 4-step framework for learning any concept deeply. By choosing a topic, explaining it in simple terms as if to a child, identifying knowledge gaps, and simplifying further with analogies, you can master complex subjects rapidly. This technique exposes weaknesses in your understanding, ensuring you retain knowledge longer.`,
+    flashcards: [
+      {
+        q: "Who created the Feynman Technique?",
+        a: "Richard Feynman, a Nobel Prize-winning physicist known for explaining complex ideas simply."
+      },
+      {
+        q: "What is the second step of the Feynman Technique?",
+        a: "Explaining the concept in simple terms as if teaching it to an 8-year-old child."
+      },
+      {
+        q: "Why should you avoid jargon when explaining a concept?",
+        a: "Jargon often hides a lack of true understanding; simple language forces you to know the concept."
+      },
+      {
+        q: "What do you do when you find gaps in your understanding?",
+        a: "Go back to the source material and study that specific area until it can be simplified."
+      }
+    ],
+    mindmap: [
+      { level: 1, text: "The Feynman Technique" },
+      { level: 2, text: "Step 1: Choose a Concept" },
+      { level: 3, text: "Study and write down everything you know" },
+      { level: 2, text: "Step 2: Teach It to a Child" },
+      { level: 3, text: "Use simple language, avoid jargon" },
+      { level: 2, text: "Step 3: Identify Gaps" },
+      { level: 3, text: "Go back to source material to fill in gaps" },
+      { level: 2, text: "Step 4: Simplify & Create Analogies" },
+      { level: 3, text: "Connect concepts to common, easily understood ideas" }
+    ],
+    imagePrompt: "Flat design conceptual vector graphic of Richard Feynman explaining physics formulas on a clean blackboard to a student, visual learning, simple line art, dual color scheme, premium vector illustration"
+  };
+
+  const loadDemoBtn = document.getElementById('load-demo-btn');
+  const demoBannerSection = document.querySelector('.demo-banner-section');
+
+  function triggerDemoLoad() {
+    window.dispatchEvent(new CustomEvent('notes-generated', {
+      detail: {
+        notes: feynmanDemoNotes,
+        videoId: 'tzuECq3yWyc',
+        noteStyle: 'detailed',
+        url: 'https://www.youtube.com/watch?v=tzuECq3yWyc'
+      }
+    }));
+    
+    // Hide the demo banner once loaded
+    if (demoBannerSection) {
+      (demoBannerSection as HTMLElement).style.display = 'none';
+    }
+  }
+
+  if (loadDemoBtn) {
+    loadDemoBtn.addEventListener('click', () => {
+      triggerDemoLoad();
+    });
+  }
+
+  // Load from URL hash shared notes if present
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.location.hash.startsWith('#note=')) {
+      try {
+        const hashBase64 = window.location.hash.substring(6);
+        const data = JSON.parse(atob(hashBase64));
+        if (data.v) {
+          // If there is shared data, we can prompt the form or output
+          // In this simple setup, we trigger a fetch or notify the user
+          // For now, let's load the demo but with their video ID
+          window.dispatchEvent(new CustomEvent('notes-generated', {
+            detail: {
+              notes: feynmanDemoNotes,
+              videoId: data.v,
+              noteStyle: data.s || 'detailed',
+              url: `https://www.youtube.com/watch?v=${data.v}`
+            }
+          }));
+          if (demoBannerSection) {
+            (demoBannerSection as HTMLElement).style.display = 'none';
+          }
+        }
+      } catch (e) {
+        console.error('Error loading shared hash note:', e);
+      }
+    }
+  });
+</script>

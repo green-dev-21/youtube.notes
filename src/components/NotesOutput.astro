@@ -1,0 +1,1403 @@
+---
+---
+<div id="notes-output-container" class="notes-output-container card">
+  <!-- Workspace Header Toolbar -->
+  <div class="workspace-header">
+    <div class="workspace-tabs">
+      <button class="tab-btn active" data-tab="detailed">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        Detailed Notes
+      </button>
+      <button class="tab-btn" data-tab="summary">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+          <line x1="21" y1="9" x2="3" y2="9"></line>
+          <line x1="21" y1="15" x2="3" y2="15"></line>
+          <line x1="12" y1="3" x2="12" y2="21"></line>
+        </svg>
+        Quick Summary
+      </button>
+      <button class="tab-btn" data-tab="flashcards">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        </svg>
+        Flashcards
+      </button>
+      <button class="tab-btn" data-tab="mindmap">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+          <circle cx="12" cy="12" r="3"></circle>
+          <line x1="18" y1="3" x2="12" y2="9"></line>
+          <line x1="12" y1="15" x2="18" y2="21"></line>
+        </svg>
+        Mind Map
+      </button>
+    </div>
+
+    <!-- Text Scale & Print Actions -->
+    <div class="workspace-actions">
+      <button id="font-decrease" class="icon-btn btn-secondary" title="Decrease font size">A-</button>
+      <button id="font-increase" class="icon-btn btn-secondary" title="Increase font size">A+</button>
+      <button id="print-layout-btn" class="icon-btn btn-secondary" title="Print Notes">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Viewer Canvas -->
+  <div id="viewer-canvas" class="viewer-canvas text-scale-medium">
+    
+    <!-- Detailed & Summary Views (Markdown) -->
+    <div id="markdown-view" class="tab-content active markdown-body">
+      <!-- Generated content goes here -->
+    </div>
+
+    <!-- Flashcards View -->
+    <div id="flashcards-view" class="tab-content">
+      <div class="flashcards-layout">
+        <!-- 3D Card -->
+        <div id="flashcard" class="flashcard-container">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <span class="card-side-label">QUESTION</span>
+              <p id="card-question-text" class="card-main-text">Loading flashcard questions...</p>
+            </div>
+            <div class="flashcard-back">
+              <span class="card-side-label">ANSWER</span>
+              <p id="card-answer-text" class="card-main-text">Loading flashcard answers...</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="flip-tip">💡 Click on the card to flip</p>
+
+        <!-- Tracker & Control Bar -->
+        <div class="flashcard-controls-container">
+          <div class="flashcard-stats">
+            <span id="flashcard-index">Card 1 of 12</span>
+            <span id="flashcard-score">Score: 0 Got It</span>
+          </div>
+          
+          <div class="progress-bar-bg" style="height: 4px; margin-bottom: var(--spacing-md);">
+            <div id="flashcard-progress-bar" class="progress-bar-fill" style="width: 8%;"></div>
+          </div>
+
+          <div class="flashcard-actions-row">
+            <button id="card-prev" class="btn btn-secondary">
+              <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              Prev
+            </button>
+            
+            <div class="review-status-buttons">
+              <button id="card-review" class="btn btn-secondary status-review" title="Mark for review">Review Again</button>
+              <button id="card-gotit" class="btn btn-primary status-gotit" title="Mark as learned">Got it! ✓</button>
+            </div>
+
+            <button id="card-next" class="btn btn-secondary">
+              Next
+              <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mind Map View -->
+    <div id="mindmap-view" class="tab-content">
+      <div class="mindmap-layout">
+        <div class="mindmap-actions-row">
+          <button id="mindmap-expand-all" class="btn btn-secondary btn-sm">Expand All</button>
+          <button id="mindmap-collapse-all" class="btn btn-secondary btn-sm">Collapse All</button>
+        </div>
+        <div id="mindmap-tree-container" class="mindmap-tree">
+          <!-- Dynamically generated list nodes -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Drawer Actions -->
+  <div class="workspace-footer no-print">
+    <div class="video-reference-info">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="var(--color-accent-red)" style="margin-right: 4px;">
+        <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.108C19.524 3.545 12 3.545 12 3.545s-7.525 0-9.388.51a3.002 3.002 0 0 0-2.11 2.108C0 8.029 0 12 0 12s0 3.971.502 5.837a3.003 3.003 0 0 0 2.11 2.108c1.863.51 9.388.51 9.388.51s7.524 0 9.388-.51a3.002 3.002 0 0 0 2.11-2.108C24 15.971 24 12 24 12s0-3.971-.502-5.837z" />
+        <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white" />
+      </svg>
+      <a id="video-source-link" href="#" target="_blank" rel="noopener noreferrer" class="footer-link">Watch Original Video</a>
+    </div>
+
+    <div class="export-actions">
+      <button id="export-copy" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        Copy Markdown
+      </button>
+
+      <button id="export-txt" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Download TXT
+      </button>
+
+      <button id="export-pdf" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+        Save PDF
+      </button>
+
+      <button id="export-share" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+        Share Note
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Slide up Toast Success Notification -->
+<div id="toast" class="toast no-print">
+  <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--color-accent-green)" stroke-width="2.5" fill="none">
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+  <span id="toast-message">Notes copied to clipboard!</span>
+</div>
+
+<style>
+  .notes-output-container {
+    display: none; /* Shown dynamically on note completion */
+    flex-direction: column;
+    margin-top: var(--spacing-3xl);
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .notes-output-container.active {
+    display: flex;
+  }
+
+  /* Workspace Header */
+  .workspace-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-hairline);
+    padding: var(--spacing-md) var(--spacing-2xl);
+    background-color: var(--color-canvas);
+  }
+
+  .workspace-tabs {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: 1px solid transparent;
+    padding: 8px 16px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--color-body);
+    border-radius: var(--rounded-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .tab-btn:hover {
+    color: var(--color-ink);
+    background-color: rgba(8, 8, 8, 0.02);
+  }
+
+  html[data-theme="dark"] .tab-btn:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+
+  .tab-btn.active {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    border-color: var(--color-primary);
+  }
+
+  .workspace-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+
+  /* Viewer Canvas Content Area */
+  .viewer-canvas {
+    padding: var(--spacing-3xl) var(--spacing-3xl);
+    max-height: 700px;
+    overflow-y: auto;
+    background-color: var(--color-canvas);
+    transition: font-size var(--transition-fast);
+  }
+
+  .text-scale-small { font-size: 13.8px !important; }
+  .text-scale-medium { font-size: 15.5px !important; }
+  .text-scale-large { font-size: 17.5px !important; }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  /* Interactive Flashcards View Styling */
+  .flashcards-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md) 0;
+  }
+
+  .card-side-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--color-mute);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .card-main-text {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--color-ink);
+    line-height: 1.5;
+    text-align: center;
+    max-width: 90%;
+  }
+
+  .flip-tip {
+    font-size: 12.8px;
+    color: var(--color-mute);
+  }
+
+  .flashcard-controls-container {
+    width: 100%;
+    max-width: 500px;
+    margin-top: var(--spacing-sm);
+  }
+
+  .flashcard-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-body);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .flashcard-actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  .review-status-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+
+  .status-review {
+    border-color: rgba(238, 29, 54, 0.4);
+    color: var(--color-accent-red);
+  }
+
+  .status-review:hover {
+    background-color: rgba(238, 29, 54, 0.05);
+    border-color: var(--color-accent-red);
+  }
+
+  .status-gotit {
+    background-color: var(--color-accent-green);
+    color: #080808;
+    border-color: var(--color-accent-green);
+  }
+
+  .status-gotit:hover {
+    opacity: 0.9;
+  }
+
+  /* Mindmap styles */
+  .mindmap-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .mindmap-actions-row {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: flex-end;
+  }
+
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .mindmap-node-toggle {
+    margin-right: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    user-select: none;
+    color: var(--color-mute);
+  }
+
+  /* Workspace Footer Actions */
+  .workspace-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--color-hairline);
+    padding: var(--spacing-lg) var(--spacing-2xl);
+    background-color: var(--color-canvas);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+
+  .video-reference-info {
+    display: flex;
+    align-items: center;
+  }
+
+  .video-reference-info .footer-link {
+    font-weight: 500;
+    color: var(--color-accent-blue-deep);
+    font-size: 14px;
+    text-decoration: underline;
+  }
+
+  .export-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 767px) {
+    .workspace-header {
+      padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    .viewer-canvas {
+      padding: var(--spacing-xl) var(--spacing-lg);
+    }
+
+    .workspace-footer {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: var(--spacing-lg) var(--spacing-lg);
+    }
+
+    .export-actions {
+      width: 100%;
+      justify-content: stretch;
+    }
+
+    .export-actions .btn {
+      flex: 1 1 40%;
+    }
+  }
+</style>
+
+<script>
+  import { marked } from 'marked';
+  import confetti from 'canvas-confetti';
+
+  // Global variables holding parsed outputs
+  let notesDataRaw = {
+    detailed: '',
+    summary: '',
+    flashcards: [] as Array<{q: string, a: string, score?: string}>,
+    mindmap: [] as Array<any>,
+    imagePrompt: '',
+    videoId: ''
+  };
+
+  // State
+  let currentActiveTab = 'detailed';
+  let textScale = 'medium'; // small, medium, large
+  let activeCardIndex = 0;
+  let flashcardScoreVal = 0;
+
+  // Cache elements
+  const notesOutputContainer = document.getElementById('notes-output-container');
+  const markdownView = document.getElementById('markdown-view');
+  const flashcardsView = document.getElementById('flashcards-view');
+  const mindmapView = document.getElementById('mindmap-view');
+
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const fontDecrease = document.getElementById('font-decrease');
+  const fontIncrease = document.getElementById('font-increase');
+  const printLayoutBtn = document.getElementById('print-layout-btn');
+  
+  const videoSourceLink = document.getElementById('video-source-link') as HTMLAnchorElement;
+
+  const exportCopy = document.getElementById('export-copy');
+  const exportTxt = document.getElementById('export-txt');
+  const exportPdf = document.getElementById('export-pdf');
+  const exportShare = document.getElementById('export-share');
+
+  const toast = document.getElementById('toast');
+  const toastMessage = document.getElementById('toast-message');
+
+  // Load event handlers
+  window.addEventListener('notes-generated', (e: any) => {
+    const { notes, videoId, noteStyle, url } = e.detail;
+
+    // Set video source URL
+    if (videoSourceLink) {
+      videoSourceLink.href = url || `https://www.youtube.com/watch?v=${videoId}`;
+    }
+
+    // Process raw output
+    processNotesPayload(notes, noteStyle, videoId);
+    
+    // Activate and scroll into view
+    if (notesOutputContainer) {
+      notesOutputContainer.classList.add('active');
+      notesOutputContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Display confettis on generation success!
+    const end = Date.now() + 1000;
+    const interval = setInterval(function() {
+      if (Date.now() > end) {
+        return clearInterval(interval);
+      }
+      confetti({
+        startVelocity: 30,
+        spread: 360,
+        ticks: 60,
+        origin: { x: Math.random(), y: Math.random() - 0.2 }
+      });
+    }, 200);
+  });
+
+  // Listeners for Tabs
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabButtons.forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      
+      const tabName = btn.getAttribute('data-tab') || 'detailed';
+      currentActiveTab = tabName;
+      
+      // Hide all content areas
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      if (tabName === 'detailed' || tabName === 'summary') {
+        if (markdownView) {
+          markdownView.classList.add('active');
+          const markdownText = tabName === 'detailed' ? notesDataRaw.detailed : notesDataRaw.summary;
+          
+          const imgHtml = notesDataRaw.imagePrompt 
+            ? `<div class="notes-infographic-container no-print" style="margin-bottom: 24px; border-radius: 8px; overflow: hidden; border: 1px solid var(--color-hairline); box-shadow: var(--shadow-sm);">
+                 <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(notesDataRaw.imagePrompt)}?width=1024&height=576&nologo=true&seed=${notesDataRaw.videoId}" alt="AI Infographic" style="width: 100%; height: auto; display: block;" />
+               </div>`
+            : '';
+            
+          markdownView.innerHTML = imgHtml + (marked.parse(markdownText) as string);
+        }
+      } else if (tabName === 'flashcards') {
+        if (flashcardsView) {
+          flashcardsView.classList.add('active');
+          renderFlashcard();
+        }
+      } else if (tabName === 'mindmap') {
+        if (mindmapView) {
+          mindmapView.classList.add('active');
+          renderMindMap();
+        }
+      }
+    });
+  });
+
+  // Client-side markdown fallback parser
+  function parseMarkdownClient(text: string) {
+    const sections = {
+      detailed: '',
+      summary: '',
+      flashcards: [] as Array<{q: string, a: string}>,
+      mindmap: [] as Array<{level: number, text: string}>,
+      imagePrompt: 'Flat design vector infographic showing central study concepts'
+    };
+
+    const lines = text.split('\n');
+    let currentSection = 'detailed';
+    let detailedLines: string[] = [];
+    let summaryLines: string[] = [];
+    let flashcardText = '';
+    let mindmapText = '';
+
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('#')) {
+        const heading = trimmed.toLowerCase();
+        if (heading.includes('summary') || heading.includes('tldr') || heading.includes('tl;dr')) {
+          currentSection = 'summary';
+        } else if (heading.includes('flashcard') || heading.includes('card')) {
+          currentSection = 'flashcards';
+        } else if (heading.includes('mindmap') || heading.includes('mind map') || heading.includes('concept map')) {
+          currentSection = 'mindmap';
+        } else if (heading.includes('image') || heading.includes('prompt')) {
+          currentSection = 'imagePrompt';
+        } else {
+          currentSection = 'detailed';
+          detailedLines.push(line);
+        }
+      } else {
+        if (currentSection === 'detailed') {
+          detailedLines.push(line);
+        } else if (currentSection === 'summary') {
+          summaryLines.push(line);
+        } else if (currentSection === 'flashcards') {
+          flashcardText += line + '\n';
+        } else if (currentSection === 'mindmap') {
+          mindmapText += line + '\n';
+        } else if (currentSection === 'imagePrompt') {
+          sections.imagePrompt += ' ' + trimmed;
+        }
+      }
+    });
+
+    sections.detailed = detailedLines.join('\n').trim();
+    sections.summary = summaryLines.join('\n').trim();
+
+    // Parse cards
+    const cardLines = (flashcardText || sections.detailed).split('\n');
+    let currentQ = '';
+    let currentA = '';
+    cardLines.forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed.toLowerCase().startsWith('q:') || trimmed.toLowerCase().startsWith('question:')) {
+        if (currentQ && currentA) {
+          sections.flashcards.push({ q: currentQ, a: currentA });
+          currentQ = '';
+          currentA = '';
+        }
+        currentQ = trimmed.replace(/^[qQ]:\s*/i, '').replace(/^question:\s*/i, '').trim();
+      } else if (trimmed.toLowerCase().startsWith('a:') || trimmed.toLowerCase().startsWith('answer:')) {
+        currentA = trimmed.replace(/^[aA]:\s*/i, '').replace(/^answer:\s*/i, '').trim();
+      } else if (currentQ && !currentA) {
+        currentQ += ' ' + trimmed;
+      } else if (currentQ && currentA) {
+        currentA += ' ' + trimmed;
+      }
+    });
+    if (currentQ && currentA) {
+      sections.flashcards.push({ q: currentQ, a: currentA });
+    }
+
+    // Parse mindmap
+    const mmLines = (mindmapText || sections.detailed).split('\n');
+    mmLines.forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('-') || trimmed.startsWith('*') || /^\d+\./.test(trimmed)) {
+        const leadingSpaces = line.length - line.trimStart().length;
+        const level = Math.min(4, Math.max(1, Math.floor(leadingSpaces / 2) + 1));
+        const textVal = trimmed.replace(/^[-*\d.]+\s*/, '').trim();
+        if (textVal) {
+          sections.mindmap.push({ level, text: textVal });
+        }
+      }
+    });
+
+    // Fallbacks if sections were not populated
+    if (sections.flashcards.length === 0) {
+      const bLines = sections.detailed.split('\n').filter(l => l.trim().startsWith('-') && l.includes(':'));
+      bLines.slice(0, 8).forEach(bullet => {
+        const parts = bullet.trim().substring(1).split(':');
+        if (parts.length >= 2) {
+          sections.flashcards.push({
+            q: `Explain the concept of "${parts[0].trim().replace(/\*\*/g, '')}"`,
+            a: parts.slice(1).join(':').trim()
+          });
+        }
+      });
+    }
+
+    if (sections.mindmap.length === 0) {
+      sections.detailed.split('\n').forEach(line => {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('#')) {
+          const hashCount = (trimmed.match(/#/g) || []).length;
+          const level = Math.min(4, hashCount);
+          const textVal = trimmed.replace(/^#+\s*/, '').trim();
+          if (textVal) {
+            sections.mindmap.push({ level, text: textVal });
+          }
+        }
+      });
+    }
+
+    if (sections.flashcards.length === 0) {
+      sections.flashcards = [{ q: "What is the primary topic discussed in the video?", a: "Please refer to the Detailed Notes tab for a full conceptual breakdown." }];
+    }
+    if (sections.mindmap.length === 0) {
+      sections.mindmap = [{ level: 1, text: "Main Topic" }, { level: 2, text: "Refer to Detailed Notes for sections" }];
+    }
+    if (!sections.summary) {
+      sections.summary = sections.detailed.substring(0, 400) + '...';
+    }
+
+    return sections;
+  }
+
+  // Parser: splits raw notes into styles
+  function processNotesPayload(notes: any, activeStyle: string, videoId: string) {
+    notesDataRaw.videoId = videoId;
+    
+    let parsedNotes = notes;
+    if (typeof notes === 'string') {
+      try {
+        parsedNotes = JSON.parse(notes);
+      } catch (e) {
+        parsedNotes = parseMarkdownClient(notes);
+      }
+    }
+
+    notesDataRaw.detailed = parsedNotes.detailed || '';
+    notesDataRaw.summary = parsedNotes.summary || '';
+    notesDataRaw.flashcards = parsedNotes.flashcards || [];
+    notesDataRaw.imagePrompt = parsedNotes.imagePrompt || '';
+    notesDataRaw.mindmap = parsedNotes.mindmap || [];
+
+    activeCardIndex = 0;
+    flashcardScoreVal = 0;
+    updateScoreDisplay();
+
+    // Auto trigger tab update
+    const activeBtn = document.querySelector(`.tab-btn[data-tab="${activeStyle}"]`) as HTMLButtonElement;
+    if (activeBtn) {
+      activeBtn.click();
+    } else {
+      const defaultBtn = document.querySelector('.tab-btn[data-tab="detailed"]') as HTMLButtonElement;
+      if (defaultBtn) defaultBtn.click();
+    }
+  }
+
+  // 3D Card Flipping Logic
+  const flashcardElement = document.getElementById('flashcard');
+  if (flashcardElement) {
+    flashcardElement.addEventListener('click', () => {
+      flashcardElement.classList.toggle('is-flipped');
+    });
+  }
+
+  // Flashcard Navigation
+  function renderFlashcard() {
+    const card = notesDataRaw.flashcards[activeCardIndex];
+    if (!card) return;
+
+    // Reset card flip
+    if (flashcardElement) flashcardElement.classList.remove('is-flipped');
+
+    // Load text
+    const qText = document.getElementById('card-question-text');
+    const aText = document.getElementById('card-answer-text');
+    if (qText) qText.innerHTML = marked.parseInline(card.q);
+    if (aText) aText.innerHTML = marked.parseInline(card.a);
+
+    // Update index display
+    const idxText = document.getElementById('flashcard-index');
+    if (idxText) idxText.textContent = `Card ${activeCardIndex + 1} of ${notesDataRaw.flashcards.length}`;
+
+    // Progress bar
+    const progressFill = document.getElementById('flashcard-progress-bar');
+    if (progressFill) {
+      const pct = ((activeCardIndex + 1) / notesDataRaw.flashcards.length) * 100;
+      progressFill.style.width = `${pct}%`;
+    }
+  }
+
+  function updateScoreDisplay() {
+    const scoreText = document.getElementById('flashcard-score');
+    if (scoreText) scoreText.textContent = `Score: ${flashcardScoreVal} Got It`;
+  }
+
+  // Prev / Next button listeners
+  const cardPrevBtn = document.getElementById('card-prev');
+  const cardNextBtn = document.getElementById('card-next');
+  const cardGotItBtn = document.getElementById('card-gotit');
+  const cardReviewBtn = document.getElementById('card-review');
+
+  if (cardPrevBtn) {
+    cardPrevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeCardIndex > 0) {
+        activeCardIndex--;
+        renderFlashcard();
+      }
+    });
+  }
+
+  if (cardNextBtn) {
+    cardNextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeCardIndex < notesDataRaw.flashcards.length - 1) {
+        activeCardIndex++;
+        renderFlashcard();
+      }
+    });
+  }
+
+  if (cardGotItBtn) {
+    cardGotItBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Only increment score if not already marked gotit
+      const currentCard = notesDataRaw.flashcards[activeCardIndex];
+      if (currentCard && !currentCard.score) {
+        currentCard.score = 'gotit';
+        flashcardScoreVal++;
+        updateScoreDisplay();
+      }
+      
+      // Auto advance
+      if (activeCardIndex < notesDataRaw.flashcards.length - 1) {
+        activeCardIndex++;
+        setTimeout(renderFlashcard, 200);
+      } else {
+        showToast("Great job! You reviewed all cards.");
+        confetti({ particleCount: 50, angle: 60, spread: 55, origin: { x: 0 } });
+        confetti({ particleCount: 50, angle: 120, spread: 55, origin: { x: 1 } });
+      }
+    });
+  }
+
+  if (cardReviewBtn) {
+    cardReviewBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const currentCard = notesDataRaw.flashcards[activeCardIndex];
+      if (currentCard && currentCard.score === 'gotit') {
+        currentCard.score = undefined;
+        if (flashcardScoreVal > 0) flashcardScoreVal--;
+        updateScoreDisplay();
+      }
+
+      // Auto advance
+      if (activeCardIndex < notesDataRaw.flashcards.length - 1) {
+        activeCardIndex++;
+        setTimeout(renderFlashcard, 200);
+      }
+    });
+  }
+
+  // Mindmap Visual Renderer
+  function renderMindMap() {
+    const container = document.getElementById('mindmap-tree-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const tree = notesDataRaw.mindmap;
+
+    let html = '<ul>';
+    let currentLevel = 0;
+
+    tree.forEach((node, i) => {
+      const nodeClass = node.level === 1 ? 'mindmap-node mindmap-node-root' : 'mindmap-node';
+      const toggleSpan = node.level < 4 ? `<span class="mindmap-node-toggle">▼</span>` : '';
+
+      if (node.level > currentLevel) {
+        if (currentLevel > 0) html += '<ul>';
+      } else if (node.level < currentLevel) {
+        html += '</li></ul>'.repeat(currentLevel - node.level) + '</li>';
+      } else {
+        if (i > 0) html += '</li>';
+      }
+
+      html += `<li class="mindmap-item" data-level="${node.level}">
+        <div class="${nodeClass}">
+          ${toggleSpan}
+          <span>${marked.parseInline(node.text)}</span>
+        </div>`;
+
+      currentLevel = node.level;
+    });
+
+    html += '</li></ul>'.repeat(currentLevel) + '</ul>';
+    container.innerHTML = html;
+
+    // Attach collapsible events to mindmap nodes
+    const toggles = container.querySelectorAll('.mindmap-node-toggle');
+    toggles.forEach(toggle => {
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const node = toggle.closest('.mindmap-node');
+        const parentLi = toggle.closest('li');
+        const subList = parentLi ? parentLi.querySelector('ul') : null;
+
+        if (subList) {
+          if (subList.style.display === 'none') {
+            subList.style.display = 'block';
+            toggle.textContent = '▼';
+          } else {
+            subList.style.display = 'none';
+            toggle.textContent = '▶';
+          }
+        }
+      });
+    });
+  }
+
+  // Expand / Collapse All Mindmap Nodes
+  const expandAllBtn = document.getElementById('mindmap-expand-all');
+  const collapseAllBtn = document.getElementById('mindmap-collapse-all');
+
+  if (expandAllBtn) {
+    expandAllBtn.addEventListener('click', () => {
+      const lists = document.querySelectorAll('.mindmap-tree ul');
+      lists.forEach(l => { (l as HTMLUListElement).style.display = 'block'; });
+      const toggles = document.querySelectorAll('.mindmap-node-toggle');
+      toggles.forEach(t => { t.textContent = '▼'; });
+    });
+  }
+
+  if (collapseAllBtn) {
+    collapseAllBtn.addEventListener('click', () => {
+      const lists = document.querySelectorAll('.mindmap-tree ul ul');
+      lists.forEach(l => { (l as HTMLUListElement).style.display = 'none'; });
+      const toggles = document.querySelectorAll('.mindmap-node-toggle');
+      toggles.forEach(t => { t.textContent = '▶'; });
+    });
+  }
+
+  // Toast Functionality
+  function showToast(message: string) {
+    if (toast && toastMessage) {
+      toastMessage.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+  }
+
+  // Text Scaling Settings
+  const viewerCanvas = document.getElementById('viewer-canvas');
+  if (fontDecrease && fontIncrease && viewerCanvas) {
+    fontDecrease.addEventListener('click', () => {
+      if (textScale === 'large') {
+        textScale = 'medium';
+        viewerCanvas.className = 'viewer-canvas text-scale-medium';
+      } else if (textScale === 'medium') {
+        textScale = 'small';
+        viewerCanvas.className = 'viewer-canvas text-scale-small';
+      }
+    });
+
+    fontIncrease.addEventListener('click', () => {
+      if (textScale === 'small') {
+        textScale = 'medium';
+        viewerCanvas.className = 'viewer-canvas text-scale-medium';
+      } else if (textScale === 'medium') {
+        textScale = 'large';
+        viewerCanvas.className = 'viewer-canvas text-scale-large';
+      }
+    });
+  }
+
+  // Dynamic html2pdf rendering with premium aesthetics and pagebreak protection
+  function generateFullPDF() {
+    // @ts-ignore
+    if (typeof html2pdf === 'undefined') {
+      showToast("Loading PDF generator, please wait...");
+      const script = document.createElement('script');
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+      script.onload = () => {
+        generateFullPDF();
+      };
+      document.head.appendChild(script);
+      return;
+    }
+
+    showToast("Compiling premium study assets into PDF...");
+
+    const printContainer = document.createElement('div');
+    printContainer.className = 'pdf-print-container';
+
+    // Premium styling with Outfit and Inter font links
+    printContainer.innerHTML = `
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+        
+        .pdf-print-container {
+          padding: 10px;
+          color: #1f2937;
+          font-family: 'Inter', system-ui, -apple-system, sans-serif;
+          line-height: 1.6;
+          background: #ffffff;
+        }
+        
+        /* Cover Page Styling */
+        .pdf-cover-page {
+          height: 258mm; /* precise A4 single-page constraint */
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          page-break-after: always;
+          box-sizing: border-box;
+          padding: 15px 10px;
+        }
+        
+        .pdf-cover-header {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          border-bottom: 1px solid #e5e7eb;
+          padding-bottom: 12px;
+        }
+        
+        .pdf-cover-logo {
+          width: 36px;
+          height: 36px;
+          object-fit: contain;
+          border-radius: 6px;
+        }
+        
+        .pdf-cover-brand {
+          font-family: 'Outfit', sans-serif;
+          font-size: 20px;
+          font-weight: 700;
+          color: #111827;
+        }
+        
+        .pdf-cover-body {
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          padding: 20px 10px;
+        }
+        
+        .pdf-cover-tag {
+          font-family: 'Outfit', sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 2.5px;
+          color: #7c3aed;
+          margin-bottom: 12px;
+        }
+        
+        .pdf-cover-title {
+          font-family: 'Outfit', sans-serif;
+          font-size: 26px;
+          font-weight: 700;
+          line-height: 1.3;
+          color: #111827;
+          margin-bottom: 20px;
+          max-width: 90%;
+        }
+        
+        .pdf-cover-image {
+          width: 100%;
+          max-width: 520px;
+          height: auto;
+          aspect-ratio: 16/9;
+          object-fit: cover;
+          border-radius: 10px;
+          border: 1px solid #e5e7eb;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          margin-bottom: 25px;
+        }
+        
+        .pdf-cover-meta {
+          display: flex;
+          gap: 20px;
+          justify-content: center;
+          font-size: 12px;
+          color: #4b5563;
+          border-top: 1px solid #f3f4f6;
+          border-bottom: 1px solid #f3f4f6;
+          padding: 10px 20px;
+        }
+        
+        .pdf-cover-footer {
+          text-align: center;
+          font-size: 11px;
+          color: #9ca3af;
+          padding-top: 10px;
+        }
+
+        /* Section page boundaries */
+        .pdf-section {
+          page-break-after: always;
+          box-sizing: border-box;
+          padding: 15px 10px;
+          min-height: 258mm;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+        
+        .pdf-section:last-child {
+          page-break-after: avoid;
+        }
+
+        .pdf-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 1px solid #e5e7eb;
+          padding-bottom: 8px;
+          margin-bottom: 20px;
+        }
+        
+        .pdf-header-title {
+          font-family: 'Outfit', sans-serif;
+          font-size: 13px;
+          font-weight: 600;
+          color: #4b5563;
+        }
+
+        .pdf-header-tag {
+          font-size: 10px;
+          color: #9ca3af;
+        }
+        
+        .pdf-content {
+          flex-grow: 1;
+        }
+        
+        .pdf-heading {
+          font-family: 'Outfit', sans-serif;
+          font-size: 20px;
+          font-weight: 700;
+          color: #1e3a8a;
+          margin-bottom: 16px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        
+        .pdf-heading::before {
+          content: '';
+          display: inline-block;
+          width: 4px;
+          height: 18px;
+          background: #3b82f6;
+          border-radius: 2px;
+        }
+
+        .pdf-footer {
+          border-top: 1px solid #f3f4f6;
+          padding-top: 8px;
+          margin-top: 20px;
+          display: flex;
+          justify-content: space-between;
+          font-size: 10px;
+          color: #9ca3af;
+        }
+
+        /* Markdown styling inside PDF sections */
+        .pdf-content h1, .pdf-content h2 { font-family: 'Outfit', sans-serif; font-size: 16px; color: #1f2937; margin-top: 18px; margin-bottom: 8px; font-weight: 600; }
+        .pdf-content h3 { font-family: 'Outfit', sans-serif; font-size: 14px; color: #374151; margin-top: 14px; margin-bottom: 6px; font-weight: 500; }
+        .pdf-content p { font-size: 12.5px; margin-bottom: 10px; color: #374151; text-align: justify; }
+        .pdf-content ul, .pdf-content ol { padding-left: 18px; margin-bottom: 12px; }
+        .pdf-content li { font-size: 12.5px; margin-bottom: 4px; color: #374151; }
+        .pdf-content strong { color: #111827; }
+        .pdf-content blockquote { border-left: 3px solid #cbd5e1; padding-left: 12px; margin: 12px 0; color: #4b5563; font-style: italic; }
+
+        /* Flashcard list grid styling */
+        .pdf-flashcards-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        
+        .pdf-flashcard {
+          border: 1px dashed #cbd5e1;
+          border-radius: 8px;
+          padding: 12px;
+          background: #f8fafc;
+          page-break-inside: avoid;
+        }
+        
+        .pdf-flashcard-q {
+          font-family: 'Outfit', sans-serif;
+          font-weight: 600;
+          font-size: 13px;
+          color: #111827;
+          margin-bottom: 4px;
+        }
+        
+        .pdf-flashcard-a {
+          font-size: 12.5px;
+          color: #4b5563;
+        }
+
+        /* Mind Map List styling */
+        .pdf-mindmap-list {
+          list-style: none;
+          padding-left: 0;
+        }
+
+        .pdf-mindmap-item {
+          padding: 5px 10px;
+          border-radius: 6px;
+          margin-bottom: 5px;
+          page-break-inside: avoid;
+          display: inline-block;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .pdf-mindmap-level-1 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14.5px; background: #e0f2fe; color: #0369a1; border-left: 4px solid #0284c7; }
+        .pdf-mindmap-level-2 { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 13px; background: #f1f5f9; color: #334155; margin-left: 16px; border-left: 3px solid #64748b; width: calc(100% - 16px); }
+        .pdf-mindmap-level-3 { font-size: 12px; background: #fafafa; color: #475569; margin-left: 32px; border-left: 2px solid #cbd5e1; width: calc(100% - 32px); }
+        .pdf-mindmap-level-4 { font-size: 11.5px; color: #64748b; margin-left: 48px; display: list-item; list-style-type: disc; width: auto; background: transparent; }
+      </style>
+    `;
+
+    // 1. Cover Page
+    const coverPage = document.createElement('div');
+    coverPage.className = 'pdf-cover-page';
+    
+    // Extract a nice title from first line of markdown detailed notes
+    const pageTitle = notesDataRaw.detailed.split('\n')[0]?.replace(/^#+\s*/, '') || 'YouTube Lecture Study Guide';
+    
+    coverPage.innerHTML = `
+      <div class="pdf-cover-header">
+        <img src="/icon.png" class="pdf-cover-logo" alt="Logo" />
+        <span class="pdf-cover-brand">YT to Notes AI</span>
+      </div>
+      
+      <div class="pdf-cover-body">
+        <span class="pdf-cover-tag">COMPLETE STUDY BUNDLE</span>
+        <h1 class="pdf-cover-title">${pageTitle}</h1>
+        ${notesDataRaw.imagePrompt ? `
+          <img class="pdf-cover-image" src="https://image.pollinations.ai/prompt/${encodeURIComponent(notesDataRaw.imagePrompt)}?width=1024&height=576&nologo=true&seed=${notesDataRaw.videoId}" alt="AI Infographic" />
+        ` : ''}
+        <div class="pdf-cover-meta">
+          <span><strong>Format:</strong> Detailed Notes, Summary, Flashcards, Mind Map</span>
+          <span><strong>Video ID:</strong> ${notesDataRaw.videoId}</span>
+        </div>
+      </div>
+      
+      <div class="pdf-cover-footer">
+        Generated by YT to Notes AI — Free Smart Study Sheets
+      </div>
+    `;
+    printContainer.appendChild(coverPage);
+
+    const footerHtml = `
+      <div class="pdf-footer">
+        <span>Generated by YT to Notes AI</span>
+        <span>Original Video ID: ${notesDataRaw.videoId}</span>
+      </div>
+    `;
+
+    // 2. Executive Summary Page
+    const summaryPage = document.createElement('div');
+    summaryPage.className = 'pdf-section';
+    summaryPage.innerHTML = `
+      <div class="pdf-header">
+        <span class="pdf-header-title">Executive Summary</span>
+        <span class="pdf-header-tag">ID: ${notesDataRaw.videoId}</span>
+      </div>
+      <div class="pdf-content">
+        <h2 class="pdf-heading">Quick Summary & Key Takeaways</h2>
+        <div>${marked.parse(notesDataRaw.summary)}</div>
+      </div>
+      ${footerHtml}
+    `;
+    printContainer.appendChild(summaryPage);
+
+    // 3. Detailed Study Notes Page
+    const detailedPage = document.createElement('div');
+    detailedPage.className = 'pdf-section';
+    detailedPage.innerHTML = `
+      <div class="pdf-header">
+        <span class="pdf-header-title">Detailed Study Notes</span>
+        <span class="pdf-header-tag">ID: ${notesDataRaw.videoId}</span>
+      </div>
+      <div class="pdf-content">
+        <h2 class="pdf-heading">Lecture Outline & Core Concepts</h2>
+        <div>${marked.parse(notesDataRaw.detailed)}</div>
+      </div>
+      ${footerHtml}
+    `;
+    printContainer.appendChild(detailedPage);
+
+    // 4. Flashcards Page
+    const flashcardPage = document.createElement('div');
+    flashcardPage.className = 'pdf-section';
+    
+    let fcHtml = '';
+    notesDataRaw.flashcards.forEach(card => {
+      fcHtml += `
+        <div class="pdf-flashcard">
+          <div class="pdf-flashcard-q">Q: ${marked.parseInline(card.q)}</div>
+          <div class="pdf-flashcard-a">A: ${marked.parseInline(card.a)}</div>
+        </div>
+      `;
+    });
+
+    flashcardPage.innerHTML = `
+      <div class="pdf-header">
+        <span class="pdf-header-title">Active Recall Flashcards</span>
+        <span class="pdf-header-tag">ID: ${notesDataRaw.videoId}</span>
+      </div>
+      <div class="pdf-content">
+        <h2 class="pdf-heading">Flashcards & Self-Testing</h2>
+        <div class="pdf-flashcards-grid">
+          ${fcHtml || '<p>No flashcards generated for this topic.</p>'}
+        </div>
+      </div>
+      ${footerHtml}
+    `;
+    printContainer.appendChild(flashcardPage);
+
+    // 5. Mindmap Page
+    const mindmapPage = document.createElement('div');
+    mindmapPage.className = 'pdf-section';
+    
+    let mmHtml = '<ul class="pdf-mindmap-list">';
+    notesDataRaw.mindmap.forEach(node => {
+      mmHtml += `<li class="pdf-mindmap-item pdf-mindmap-level-${node.level}">${marked.parseInline(node.text)}</li>`;
+    });
+    mmHtml += '</ul>';
+
+    mindmapPage.innerHTML = `
+      <div class="pdf-header">
+        <span class="pdf-header-title">Concept Map</span>
+        <span class="pdf-header-tag">ID: ${notesDataRaw.videoId}</span>
+      </div>
+      <div class="pdf-content">
+        <h2 class="pdf-heading">Visual Mind Map & Relationships</h2>
+        ${notesDataRaw.mindmap.length > 0 ? mmHtml : '<p>No hierarchical nodes generated.</p>'}
+      </div>
+      ${footerHtml}
+    `;
+    printContainer.appendChild(mindmapPage);
+
+    const opt = {
+      margin:       [10, 12, 10, 12], // custom page margins (top, left, bottom, right)
+      filename:     `YT_AI_Notes_${notesDataRaw.videoId}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak:    { mode: ['css', 'legacy'], avoid: ['.pdf-flashcard', '.pdf-mindmap-item', 'p', 'li', 'h1', 'h2', 'h3', 'blockquote'] }
+    };
+
+    // @ts-ignore
+    html2pdf().set(opt).from(printContainer).save().then(() => {
+      showToast("Premium study PDF downloaded!");
+    }).catch((err: any) => {
+      console.error("PDF generation failed:", err);
+      showToast("PDF generation failed, opening standard printer...");
+      window.print();
+    });
+  }
+
+  // Print Button & Export PDF Button Hook
+  if (printLayoutBtn) {
+    printLayoutBtn.addEventListener('click', () => {
+      generateFullPDF();
+    });
+  }
+
+  if (exportPdf) {
+    exportPdf.addEventListener('click', () => {
+      generateFullPDF();
+    });
+  }
+
+  // Export Copy
+  if (exportCopy) {
+    exportCopy.addEventListener('click', () => {
+      let contentToCopy = '';
+      if (currentActiveTab === 'detailed') contentToCopy = notesDataRaw.detailed;
+      else if (currentActiveTab === 'summary') contentToCopy = notesDataRaw.summary;
+      else if (currentActiveTab === 'flashcards') {
+        contentToCopy = notesDataRaw.flashcards.map(c => `Q: ${c.q}\nA: ${c.a}\n`).join('\n');
+      } else if (currentActiveTab === 'mindmap') {
+        contentToCopy = notesDataRaw.mindmap.map(n => '\t'.repeat(n.level - 1) + n.text).join('\n');
+      }
+
+      navigator.clipboard.writeText(contentToCopy);
+      showToast("Notes copied to clipboard!");
+    });
+  }
+
+  // Export TXT
+  if (exportTxt) {
+    exportTxt.addEventListener('click', () => {
+      let content = '';
+      let filename = 'study_notes';
+      
+      if (currentActiveTab === 'detailed') {
+        content = notesDataRaw.detailed;
+        filename = `youtube_detailed_notes_${notesDataRaw.videoId || 'notes'}.txt`;
+      } else if (currentActiveTab === 'summary') {
+        content = notesDataRaw.summary;
+        filename = `youtube_summary_${notesDataRaw.videoId || 'notes'}.txt`;
+      } else if (currentActiveTab === 'flashcards') {
+        content = notesDataRaw.flashcards.map(c => `Q: ${c.q}\nA: ${c.a}\n`).join('\n');
+        filename = `youtube_flashcards_${notesDataRaw.videoId || 'notes'}.txt`;
+      } else if (currentActiveTab === 'mindmap') {
+        content = notesDataRaw.mindmap.map(n => '\t'.repeat(n.level - 1) + n.text).join('\n');
+        filename = `youtube_mindmap_${notesDataRaw.videoId || 'notes'}.txt`;
+      }
+
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      showToast("Download started!");
+    });
+  }
+
+  // Export Share (Generates copyable link with parameters)
+  if (exportShare) {
+    exportShare.addEventListener('click', () => {
+      // Build share URL using hash encoding to avoid server-side logging
+      const hashData = btoa(JSON.stringify({
+        v: notesDataRaw.videoId,
+        s: currentActiveTab
+      }));
+      
+      const shareUrl = `${window.location.origin}${window.location.pathname}#note=${hashData}`;
+      
+      navigator.clipboard.writeText(shareUrl);
+      showToast("Shareable link copied to clipboard!");
+    });
+  }
+</script>

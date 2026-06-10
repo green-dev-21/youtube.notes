@@ -1,0 +1,256 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { marked } from 'marked';
+
+export async function getStaticPaths() {
+  return [
+    {
+      params: { slug: "how-to-take-notes-from-youtube-videos-ai-method" },
+      props: {
+        title: "How to Take Notes from YouTube Videos (AI Method)",
+        description: "Discover the difference between active and passive study, and how to utilize AI to instantly compile structured study notes from YouTube videos.",
+        date: "June 8, 2026",
+        readTime: "5 min read",
+        tag: "Productivity",
+        content: `
+Passive video watching is one of the most common traps in modern studying. You sit down, open a 45-minute YouTube lecture, hit play, and watch the instructor explain a topic. You feel like you're learning. However, cognitive science studies show that our brains retain less than 10% of what we read or watch passively. 
+
+To turn video content into long-term memory, you need to transition to **active learning**. This article covers the step-by-step method to utilize artificial intelligence to instantly extract, clean, and structure YouTube transcripts into active study resources.
+
+***
+
+### The Cognitive Cost of Manual Note-Taking
+
+Many students try to take notes manually by constantly pausing and rewinding the video. While this is better than passive watching, it comes with a high cognitive and time cost:
+1. **Focus Split:** Your brain is constantly alternating between listening to the presenter and writing down sentences. This dual-tasking reduces overall comprehension.
+2. **Time Inflator:** A 30-minute coding tutorial or science lecture can easily take 90 minutes to watch if you are stopping to write every key term.
+3. **Low Quality Outline:** Without knowing what the speaker will say next, it is difficult to organize notes hierarchically on the fly. You end up writing a wall of text instead of structural topics.
+
+By delegating the initial extraction and outline drafting to AI, you can keep your focus entirely on the video's concepts, then immediately step into the active recall phase.
+
+***
+
+### The AI Method: How It Works
+
+The AI method utilizes a 3-step pipeline to transform YouTube videos into study sheets without wasting time or tokens:
+
+#### 1. Extract the Transcription
+Rather than feeding video files directly into an AI (which consumes massive processing power and bandwidth), we fetch the text transcript. YouTube automatically generates captions for almost every video. By downloading these text captions, we get the exact spoken words in a tiny file size.
+
+#### 2. Compress and Clean the Text
+Raw transcripts are filled with spoken filler words ("um", "uh", "you know", "like") and duplicate sentences. A cleaning script strips these out. This reduces the token size by 20% to 40%, ensuring we don't hit model rate limits and keep inputs highly relevant.
+
+#### 3. Structured Note Synthesis
+The clean transcript is sent to a large language model with a structuring prompt. The AI acts as a digital editor, sorting the raw text into:
+- **Key Topics:** Major categories and chapters.
+- **Key Points:** Bullet points detailing core sub-concepts.
+- **Important Definitions:** Translating technical jargon explained in the speech.
+- **Action Items:** Practical takeaways or exercises.
+
+***
+
+### Active Studying: What to Do with AI Notes
+
+Once the AI compiles your notes, your real study session begins. Never just read the notes! Instead, use these active recall strategies:
+
+- **The Flippable Flashcard Review:** Use the Flashcard mode to test your understanding. Try to answer the question out loud before clicking the card to flip it and reveal the answer. If you get it right, mark it "Got it!"; if you struggled, leave it for review.
+- **Analogical Writing:** Look at the definitions and write down your own analogy for them. If the speaker defined *API* as a "waiter in a restaurant", think of a different analogy (e.g. a postman) to verify you truly understand it.
+- **Pruning the Tree:** Use the Mind Map view to trace the structure. Try closing your eyes and sketching the branches from memory on a sheet of paper.
+- **The Feynman Technique:** Go to the action items. Try explaining the main topic to a friend or a blank wall in under two minutes without looking at the notes. Where you stumble represents a gap in your knowledge—go back to that section of the video and study it again.
+
+### Conclusion
+
+AI note-takers are not shortcuts to bypass studying; they are accelerators to bypass transcription. By letting **YouTube to Notes AI** build your outline, you save hours of tedious typing and can invest 100% of your energy where it matters: active recall, spaced repetition, and deep comprehension.
+        `
+      }
+    },
+    {
+      params: { slug: "best-free-ai-tools-for-students-2026" },
+      props: {
+        title: "Best Free AI Tools for Students in 2026",
+        description: "An ultimate review of the top free artificial intelligence tools helping students write, summarize, map concepts, and study in 2026.",
+        date: "June 5, 2026",
+        readTime: "6 min read",
+        tag: "Education",
+        content: `
+In 2026, artificial intelligence is no longer just a gimmick for writing essays; it has become an essential copilot for studying, research, and learning. However, as AI tools monetize, students are increasingly faced with expensive monthly paywalls. 
+
+Fortunately, there are still exceptional free AI tools that don't require credit cards or premium accounts. This guide reviews the best free AI studying assistants available in 2026 and how you can combine them for maximum impact.
+
+***
+
+### 1. YouTube to Notes AI (Study Outlines & Recall)
+Most lecture summarizers require premium upgrades, force logins, or restrict you to 10 minutes of video processing. **YouTube to Notes AI** solves these limitations by offering a 100% free, no-signup tool.
+
+- **What it does:** Converts YouTube lecture URLs into four formats: Detailed study sheets, TL;DR bullet points, 3D interactive flashcard decks, and collapsible mind map trees.
+- **Best feature:** If YouTube rate-limits the server, you can paste the transcript text manually. Additionally, it uses a provider waterfall to ensure high availability.
+- **How to use it:** Use it at the start of your study block to map out college lectures, coding bootcamps, or tutorial channels.
+
+***
+
+### 2. Anki (Spaced Repetition System)
+While not an AI model itself, Anki is the gold standard for long-term retention. 
+
+- **What it does:** An open-source flashcard program that uses an advanced spaced repetition algorithm to show you cards right before your brain is about to forget them.
+- **AI integration:** You can copy the flashcard text generated by **YouTube to Notes AI** and import it directly into Anki to build decks instantly.
+- **Best feature:** 100% free for desktop and Android. It ensures you retain information for months instead of cramming for a single night.
+
+***
+
+### 3. Obsidian (Digital Brain & Concept Mapping)
+Obsidian is a free, local-first markdown note-taking app that acts as a second brain.
+
+- **What it does:** It lets you link notes together using bidirectional links, creating a visual graph network of your knowledge.
+- **AI integration:** Download the markdown detailed notes from our tool and save them in your Obsidian vault. You can link key definitions to other notes in your syllabus.
+- **Best feature:** Since notes are stored as local text files, they are completely private and load instantly.
+
+***
+
+### 4. NotebookLM (Research Companion)
+NotebookLM is a free experimental tool from Google that acts as a personalized virtual research assistant.
+
+- **What it does:** You upload your textbooks, PDFs, notes, or slides, and the AI answers questions based *only* on the sources you provided.
+- **Best feature:** It creates automated audio discussions (podcasts) summarizing your documents, which is incredible for auditory learners.
+- **How to use it:** Import the detailed notes downloaded from YouTube to Notes AI into NotebookLM along with your professor's slides to get a fully cited study guide.
+
+***
+
+### Comparison Matrix: Key Study Assistants
+
+| Tool | Format | Free Tier Limit | Highlights |
+|---|---|---|---|
+| **YouTube to Notes AI** | Markdown Sheets, Flashcards, Mind Maps | Free (No signup) | PDF/TXT downloads, high availability |
+| **Anki** | Spaced Repetition Flashcards | 100% Free | Best for long-term review |
+| **Obsidian** | Local Markdown Vault | 100% Free | Graphical node link mapping |
+| **NotebookLM** | Document Q&A, Audio Guides | Free (Google Account) | Zero hallucinations outside source documents |
+
+***
+
+### Tips for Building a Free AI Study Workflow
+
+To maximize these free tools, integrate them into a unified study pipeline:
+1. **Extract:** Paste your professor's lecture video into **YouTube to Notes AI** and generate a Detailed Note.
+2. **Review:** Click the Flashcards tab in the workspace. Run through the cards to build immediate concept familiarity.
+3. **Organize:** Download the Detailed Notes as a '.txt' file, rename it to '.md', and drop it into your **Obsidian** vault.
+4. **Synthesize:** Import the note into **NotebookLM** along with your textbook chapter. Ask the AI: *"What did the lecture cover that the textbook left out?"* or *"Generate an exam based on these sources."*
+
+This stack is entirely free, requires zero paid plans, and matches or exceeds the capabilities of expensive premium platforms.
+        `
+      }
+    },
+    {
+      params: { slug: "how-to-convert-youtube-lectures-to-pdf-notes-free" },
+      props: {
+        title: "How to Convert YouTube Lectures to PDF Notes Free",
+        description: "A complete step-by-step guide to converting complex university lectures on YouTube into well-formatted, printable study PDF sheets.",
+        date: "May 29, 2026",
+        readTime: "4 min read",
+        tag: "Guides",
+        content: `
+For many students, physical, printed study sheets represent the best way to revise. Highlight pens, marginalia notes, and tactile paper sheets have been proven to increase reading comprehension compared to scrolling on a screen. 
+
+However, getting digital video content onto paper is a tedious task of typing, editing, and formatting. In this guide, we show you how to convert any YouTube lecture into a professional, print-ready PDF note file for free.
+
+***
+
+### The Printing Problem of Web Summarizers
+
+If you try to print notes directly from most online summarizing websites, the resulting PDF is typically cluttered and unreadable. You get:
+*   Website logos, sidebar menus, and headers blocking the text.
+*   Random page breaks that cut sentences in half.
+*   Poor spacing and font sizes that waste paper.
+*   Advertisements and cookie banners embedded in the middle of your study sheet.
+
+To solve this, **YouTube to Notes AI** includes a custom **print-friendly stylesheet** that configures the browser's native print engine to only print the notes canvas.
+
+***
+
+### Step-by-Step: Exporting YouTube Lectures to PDF
+
+Here is the exact procedure to get clean, readable study sheets from video lectures:
+
+#### Step 1: Generate Your Notes
+Paste your lecture video URL into [YouTube to Notes AI](/) and select the **Detailed Notes** format. Click generate. If the video is in a different language, choose your translation options in the dropdown.
+
+#### Step 2: Format the View
+Once the notes are compiled, select the tab you wish to print. Usually, the *Detailed Notes* tab is best for full reference sheets, while the *Quick Summary* is best for a quick exam review sheet.
+
+Adjust the font controls (A- / A+) in the workspace toolbar to change the text scale. We recommend scaling the text to **medium** or **small** to fit more content per page and save paper.
+
+#### Step 3: Trigger the PDF Generator
+Click the **'Save PDF'** or printer icon in the bottom export drawer. Alternatively, you can press **Ctrl + P** (or Cmd + P on Mac) on your keyboard.
+
+#### Step 4: Configure Browser Print Settings
+When the print dialogue box appears:
+1. **Destination:** Select **Save as PDF** (or Microsoft Print to PDF).
+2. **Layout:** Choose **Portrait**.
+3. **Margins:** Select **Default** or **Minimum**. (Minimum margins give you more space per page).
+4. **Options:** **Uncheck** 'Headers and footers' (this removes the browser date and page URLs from the margins, making the sheet look like a published book).
+5. **Background Graphics:** **Check** this box. This ensures that the styled highlight backgrounds of definitions, bullet list lines, and code blocks appear in the PDF.
+
+Click **Save**, choose a folder on your computer, and name your file.
+
+***
+
+### How to Organize Your Printed Study Binders
+
+Once you have saved your lecture PDFs, print them out and organize them using these active studying frameworks:
+
+*   **Cornell Note Layout:** Leave a 2-inch blank margin on the left side of your printouts. Use this space during revision to write down cue questions, definitions, and active recall prompts.
+*   **The Highlight Coding System:** Use three highlighter colors on your printed sheet:
+    *   **Yellow:** Key concepts and definitions.
+    *   **Orange:** Action items, code examples, or equations.
+    *   **Green:** Mind map connections and reference links.
+*   **Active Revision:** At the start of each study block, review the previous lecture's printed summary sheet. Write a 2-sentence summary at the bottom of the page from memory to check your retention before moving on to the next video.
+
+This method gives you a clean, analog study system derived directly from digital video lectures, entirely for free.
+        `
+      }
+    }
+  ];
+}
+
+const { title, description, date, readTime, tag, content } = Astro.props;
+---
+
+<BaseLayout title={`${title} — YouTube to Notes AI`} description={description}>
+  <section class="section">
+    <div class="container" style="max-width: 800px; margin: 0 auto; padding-top: var(--spacing-xl);">
+      <a href="/blog" class="btn btn-secondary" style="margin-bottom: var(--spacing-2xl); display: inline-flex; align-self: flex-start;">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" style="margin-right: 4px;">
+          <polyline points="19 12 5 12 12 19 12 5"></polyline>
+        </svg>
+        Back to Blog
+      </a>
+
+      <article class="card blog-post-card">
+        <div class="post-header" style="margin-bottom: var(--spacing-xl);">
+          <div style="display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-sm);">
+            <span class="badge badge-info">{tag}</span>
+            <span class="post-meta" style="font-size: 13.5px; color: var(--color-mute);">{date} &bull; {readTime}</span>
+          </div>
+          <h1 style="font-size: 40px; font-weight: 600; line-height: 1.2; color: var(--color-ink); letter-spacing: -0.02em;">{title}</h1>
+        </div>
+
+        <div class="post-content markdown-body" set:html={marked.parse(content)} />
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .blog-post-card {
+    padding: var(--spacing-3xl) var(--spacing-3xl);
+  }
+
+  .post-content {
+    border-top: 1px solid var(--color-hairline);
+    padding-top: var(--spacing-xl);
+  }
+
+  @media (max-width: 767px) {
+    .blog-post-card {
+      padding: var(--spacing-xl) var(--spacing-lg);
+    }
+  }
+</style>

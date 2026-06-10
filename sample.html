@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Notes — Graph Representation</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --bg2: #161b27;
+    --bg3: #1e2433;
+    --border: #2a3047;
+    --text: #e8eaf0;
+    --muted: #8892a4;
+    --accent: #6c63ff;
+    --accent2: #00d9a3;
+    --accent3: #ff6b6b;
+    --accent4: #ffd166;
+    --code-bg: #0d1117;
+    --radius: 10px;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .yt-thumb {
+    width: 48px;
+    height: 34px;
+    background: var(--bg3);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .yt-thumb svg { width: 20px; height: 20px; }
+  .topbar-info { flex: 1; min-width: 0; }
+  .topbar-title {
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text);
+  }
+  .topbar-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .tab-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .15s;
+    font-weight: 500;
+  }
+  .tab-btn:hover { background: var(--bg3); color: var(--text); }
+  .tab-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* ── LAYOUT ── */
+  .layout { display: flex; min-height: calc(100vh - 63px); }
+
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 16px 0;
+    position: sticky;
+    top: 63px;
+    height: calc(100vh - 63px);
+    overflow-y: auto;
+  }
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    color: var(--muted);
+    padding: 0 16px 8px;
+    text-transform: uppercase;
+  }
+  .toc-item {
+    display: block;
+    padding: 7px 16px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all .15s;
+    text-decoration: none;
+  }
+  .toc-item:hover, .toc-item.active {
+    color: var(--text);
+    background: var(--bg3);
+    border-left-color: var(--accent);
+  }
+
+  .main { flex: 1; overflow-y: auto; padding: 28px 32px; max-width: 860px; }
+
+  /* ── TABS ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 36px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 17px; font-weight: 600; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ── KEY POINTS ── */
+  .keypoint {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 14px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+  .keypoint-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .keypoint-text { font-size: 13px; line-height: 1.6; }
+
+  /* ── CODE ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 12px 0;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+  }
+  .code-lang { font-size: 11px; color: var(--accent2); font-weight: 600; }
+  .copy-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .copy-btn:hover { background: var(--bg2); color: var(--text); }
+  .copy-btn.copied { border-color: var(--accent2); color: var(--accent2); }
+  pre {
+    padding: 14px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+    overflow-x: auto;
+    color: #cdd6f4;
+  }
+  .kw { color: #cba6f7; }
+  .ty { color: #89b4fa; }
+  .cm { color: #585b70; }
+  .st { color: #a6e3a1; }
+  .nm { color: #fab387; }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 12px 0;
+  }
+  .compare-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .compare-card.matrix { border-top: 3px solid var(--accent); }
+  .compare-card.list { border-top: 3px solid var(--accent2); }
+  .compare-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .compare-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .compare-row:last-child { border-bottom: none; }
+  .compare-label { color: var(--muted); }
+  .compare-val { font-weight: 600; font-family: monospace; font-size: 12px; }
+  .green { color: var(--accent2); }
+  .purple { color: var(--accent); }
+  .red { color: var(--accent3); }
+  .yellow { color: var(--accent4); }
+
+  /* ── COMPLEXITY TABLE ── */
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th {
+    background: var(--bg3);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: .05em;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  td {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: monospace;
+    font-size: 12px;
+  }
+  tr:nth-child(even) td { background: var(--bg2); }
+  .o1 { color: var(--accent2); font-weight: 600; }
+  .ov { color: var(--accent4); font-weight: 600; }
+  .ove { color: var(--accent3); font-weight: 600; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+  .badge-green { background: rgba(0,217,163,.15); color: var(--accent2); border: 1px solid rgba(0,217,163,.25); }
+  .badge-purple { background: rgba(108,99,255,.15); color: var(--accent); border: 1px solid rgba(108,99,255,.25); }
+
+  /* ── PROGRESS / VISUAL ── */
+  .graph-visual {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 12px 0;
+    text-align: center;
+  }
+  .matrix-viz {
+    display: inline-grid;
+    grid-template-columns: repeat(5, 40px);
+    gap: 3px;
+    font-size: 13px;
+    font-family: monospace;
+  }
+  .cell {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+    font-size: 13px;
+  }
+  .cell-header {
+    background: var(--bg3);
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .cell-0 {
+    background: var(--code-bg);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .cell-1 {
+    background: rgba(108,99,255,.25);
+    color: var(--accent);
+    border: 1px solid rgba(108,99,255,.4);
+  }
+  .cell:hover { transform: scale(1.1); }
+
+  /* ── FLASHCARDS ── */
+  .flashcard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .flashcard {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    cursor: pointer;
+    transition: all .2s;
+    min-height: 110px;
+    position: relative;
+  }
+  .flashcard:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .fc-q { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .fc-a {
+    font-size: 12px;
+    color: var(--muted);
+    display: none;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+  .flashcard.revealed .fc-a { display: block; }
+  .flashcard.revealed { border-color: var(--accent2); }
+  .fc-hint { font-size: 10px; color: var(--muted); position: absolute; bottom: 10px; right: 12px; }
+  .fc-code { font-family: monospace; background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 11px; color: var(--accent2); }
+
+  /* ── MINDMAP ── */
+  .mindmap {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    overflow-x: auto;
+  }
+  .mm-center {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 13px;
+    margin: 0 auto 20px;
+  }
+  .mm-branches { display: flex; gap: 16px; flex-wrap: wrap; }
+  .mm-branch {
+    flex: 1;
+    min-width: 180px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .mm-branch-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent2);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mm-leaf {
+    font-size: 11px;
+    color: var(--muted);
+    padding: 3px 0 3px 10px;
+    border-left: 2px solid var(--border);
+    margin: 4px 0;
+  }
+
+  /* ── DOWNLOAD BAR ── */
+  .action-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .action-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .15s;
+    font-weight: 500;
+  }
+  .action-btn:hover { background: var(--bg3); border-color: var(--accent); }
+  .action-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .action-btn.primary:hover { opacity: .9; }
+
+  /* ── DEFINITION LIST ── */
+  .def-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .def-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .def-term {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    font-family: monospace;
+    margin-bottom: 4px;
+  }
+  .def-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+  /* ── PROGRESS TRACKER ── */
+  .progress-bar-wrap {
+    background: var(--bg3);
+    border-radius: 100px;
+    height: 5px;
+    width: 100%;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 100px;
+    width: 0%;
+    transition: width .3s;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .sidebar { display: none; }
+    .main { padding: 16px; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .tab-bar { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="yt-thumb">
+    <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#FF0000"/><polygon points="10,8 17,12 10,16" fill="white"/></svg>
+  </div>
+  <div class="topbar-info">
+    <div class="topbar-title">Graph Representation and Implementation</div>
+    <div class="topbar-meta">Data Structures & Algorithms · Auto-generated notes</div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('notes', this)">📝 Notes</button>
+    <button class="tab-btn" onclick="switchTab('flashcards', this)">🃏 Flashcards</button>
+    <button class="tab-btn" onclick="switchTab('mindmap', this)">🗺️ Mind Map</button>
+    <button class="tab-btn" onclick="switchTab('quiz', this)">⚡ Quiz</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR TOC -->
+  <div class="sidebar">
+    <div class="sidebar-label">Contents</div>
+    <a class="toc-item active" onclick="scrollTo('intro')">Introduction</a>
+    <a class="toc-item" onclick="scrollTo('types')">Graph Types</a>
+    <a class="toc-item" onclick="scrollTo('matrix')">Adjacency Matrix</a>
+    <a class="toc-item" onclick="scrollTo('list')">Adjacency List</a>
+    <a class="toc-item" onclick="scrollTo('comparison')">Comparison</a>
+    <a class="toc-item" onclick="scrollTo('complexity')">Complexity</a>
+    <a class="toc-item" onclick="scrollTo('glossary')">Glossary</a>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main" id="main-scroll">
+
+    <!-- NOTES TAB -->
+    <div id="tab-notes" class="tab-panel active">
+
+      <div class="action-bar">
+        <button class="action-btn primary" onclick="copyAll()">📋 Copy Notes</button>
+        <button class="action-btn" onclick="window.print()">⬇️ Save PDF</button>
+        <button class="action-btn" id="lang-btn" onclick="toggleLang()">🌐 View in Hindi</button>
+        <span style="margin-left:auto;font-size:11px;color:var(--muted);align-self:center">6 sections · ~8 min read</span>
+      </div>
+
+      <!-- INTRO -->
+      <div class="section" id="intro">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(108,99,255,.15)">🧩</div>
+          <span class="section-title">Introduction to Graph Representation</span>
+        </div>
+        <div class="card">
+          <div class="card-title">What is Graph Representation?</div>
+          <p>Storing a graph in a computer system using a data structure, so it can be manipulated algorithmically. Just as an array is represented as <code style="font-size:11px;background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--accent2)">int arr[n]</code> in C++, a graph needs its own structure.</p>
+        </div>
+        <div class="keypoint">
+          <div class="keypoint-dot" style="background:var(--accent)"></div>
+          <div class="keypoint-text">Two primary methods: <strong>Adjacency Matrix</strong> and <strong>Adjacency List</strong></div>
+        </div>
+        <div class="keypoint">
+          <div class="keypoint-dot" style="background:var(--accent2)"></div>
+          <div class="keypoint-text">A graph consists of <strong>vertices (V)</strong> and <strong>edges (E)</strong> between them</div>
+        </div>
+        <div class="keypoint">
+          <div class="keypoint-dot" style="background:var(--accent4)"></div>
+          <div class="keypoint-text">Tree is a special graph: n nodes, n−1 edges, no cycles, one root</div>
+        </div>
+      </div>
+
+      <!-- GRAPH TYPES -->
+      <div class="section" id="types">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(0,217,163,.15)">🔀</div>
+          <span class="section-title">Graph Types</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="card">
+            <div class="card-title">Undirected Unweighted</div>
+            <p>Edges have no direction and no weight. Matrix is symmetric. 0 or 1 values only.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Undirected Weighted</div>
+            <p>Edges have no direction but carry numeric weights. Matrix stores the weight value.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Directed Unweighted</div>
+            <p>Edges have direction (one-way). Matrix is asymmetric — only (i,j) is set.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Directed Weighted</div>
+            <p>Edges have both direction and weight. Most complex. Used for road networks.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MATRIX -->
+      <div class="section" id="matrix">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(108,99,255,.15)">📊</div>
+          <span class="section-title">Adjacency Matrix</span>
+        </div>
+        <div class="keypoint">
+          <div class="keypoint-dot" style="background:var(--accent)"></div>
+          <div class="keypoint-text">A V×V 2D array. Cell [i][j] = 1 (or weight) if edge exists, 0 otherwise</div>
+        </div>
+        <div class="keypoint">
+          <div class="keypoint-dot" style="background:var(--accent)"></div>
+          <div class="keypoint-text">For undirected graphs: <strong>symmetric</strong> — [i][j] always equals [j][i]</div>
+        </div>
+        <div class="keypoint">
+          <div class="keypoint-dot" style="background:var(--accent)"></div>
+          <div class="keypoint-text">Space: <span class="fc-code">O(V²)</span> regardless of number of edges — wasteful for sparse graphs</div>
+        </div>
+
+        <!-- Interactive matrix -->
+        <div class="graph-visual">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Interactive: 5-node undirected graph — click cells to explore</div>
+          <div class="matrix-viz" id="adj-matrix">
+            <div class="cell cell-header"></div>
+            <div class="cell cell-header">0</div>
+            <div class="cell cell-header">1</div>
+            <div class="cell cell-header">2</div>
+            <div class="cell cell-header">3</div>
+            <div class="cell cell-header">0</div>
+            <div class="cell cell-0" data-r="0" data-c="0">0</div>
+            <div class="cell cell-1" data-r="0" data-c="1">1</div>
+            <div class="cell cell-0" data-r="0" data-c="2">0</div>
+            <div class="cell cell-1" data-r="0" data-c="3">1</div>
+            <div class="cell cell-header">1</div>
+            <div class="cell cell-1" data-r="1" data-c="0">1</div>
+            <div class="cell cell-0" data-r="1" data-c="1">0</div>
+            <div class="cell cell-1" data-r="1" data-c="2">1</div>
+            <div class="cell cell-0" data-r="1" data-c="3">0</div>
+            <div class="cell cell-header">2</div>
+            <div class="cell cell-0" data-r="2" data-c="0">0</div>
+            <div class="cell cell-1" data-r="2" data-c="1">1</div>
+            <div class="cell cell-0" data-r="2" data-c="2">0</div>
+            <div class="cell cell-1" data-r="2" data-c="3">1</div>
+            <div class="cell cell-header">3</div>
+            <div class="cell cell-1" data-r="3" data-c="0">1</div>
+            <div class="cell cell-0" data-r="3" data-c="1">0</div>
+            <div class="cell cell-1" data-r="3" data-c="2">1</div>
+            <div class="cell cell-0" data-r="3" data-c="3">0</div>
+          </div>
+          <div id="cell-info" style="font-size:11px;color:var(--muted);margin-top:10px;min-height:18px"></div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">C++ — Undirected Unweighted</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="kw">int</span> v, e;
+cin >> v >> e;
+
+<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="kw">int</span>&gt;&gt; mat(v, <span class="ty">vector</span>&lt;<span class="kw">int</span>&gt;(v, <span class="nm">0</span>));
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">0</span>; i &lt; e; i++) {
+    <span class="kw">int</span> u, w;
+    cin >> u >> w;
+    mat[u][w] = <span class="nm">1</span>;
+    mat[w][u] = <span class="nm">1</span>;  <span class="cm">// undirected: both sides</span>
+}</pre>
+        </div>
+      </div>
+
+      <!-- LIST -->
+      <div class="section" id="list">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(0,217,163,.15)">📋</div>
+          <span class="section-title">Adjacency List</span>
+        </div>
+        <div class="keypoint">
+          <div class="keypoint-dot" style="background:var(--accent2)"></div>
+          <div class="keypoint-text">Array of vectors — each vertex holds a list of its neighbors</div>
+        </div>
+        <div class="keypoint">
+          <div class="keypoint-dot" style="background:var(--accent2)"></div>
+          <div class="keypoint-text">Space: <span class="fc-code">O(V + E)</span> — much better for sparse graphs</div>
+        </div>
+        <div class="keypoint">
+          <div class="keypoint-dot" style="background:var(--accent2)"></div>
+          <div class="keypoint-text">Weighted: store <span class="fc-code">pair&lt;int,int&gt;</span> (neighbor, weight) in each list</div>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">C++ — Unweighted</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="kw">int</span>&gt;&gt; adj(v);
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">0</span>; i &lt; e; i++) {
+    <span class="kw">int</span> u, w;
+    cin >> u >> w;
+    adj[u].push_back(w);
+    adj[w].push_back(u);  <span class="cm">// undirected</span>
+}</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">C++ — Weighted</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">pair</span>&lt;<span class="kw">int</span>,<span class="kw">int</span>&gt;&gt;&gt; adj(v);  <span class="cm">// {neighbor, weight}</span>
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">0</span>; i &lt; e; i++) {
+    <span class="kw">int</span> u, w, wt;
+    cin >> u >> w >> wt;
+    adj[u].push_back({w, wt});
+    adj[w].push_back({u, wt});
+}</pre>
+        </div>
+      </div>
+
+      <!-- COMPARISON -->
+      <div class="section" id="comparison">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(255,107,107,.15)">⚖️</div>
+          <span class="section-title">Head-to-Head Comparison</span>
+        </div>
+        <div class="compare-grid">
+          <div class="compare-card matrix">
+            <div class="compare-title" style="color:var(--accent)">📊 Adjacency Matrix</div>
+            <div class="compare-row">
+              <span class="compare-label">Space</span>
+              <span class="compare-val ove">O(V²)</span>
+            </div>
+            <div class="compare-row">
+              <span class="compare-label">Edge lookup</span>
+              <span class="compare-val green">O(1)</span>
+            </div>
+            <div class="compare-row">
+              <span class="compare-label">Edge delete</span>
+              <span class="compare-val green">O(1)</span>
+            </div>
+            <div class="compare-row">
+              <span class="compare-label">Best for</span>
+              <span class="compare-val yellow">Dense graphs</span>
+            </div>
+          </div>
+          <div class="compare-card list">
+            <div class="compare-title" style="color:var(--accent2)">📋 Adjacency List</div>
+            <div class="compare-row">
+              <span class="compare-label">Space</span>
+              <span class="compare-val green">O(V+E)</span>
+            </div>
+            <div class="compare-row">
+              <span class="compare-label">Edge lookup</span>
+              <span class="compare-val ov">O(degree)</span>
+            </div>
+            <div class="compare-row">
+              <span class="compare-label">Edge delete</span>
+              <span class="compare-val ov">O(degree)</span>
+            </div>
+            <div class="compare-row">
+              <span class="compare-label">Best for</span>
+              <span class="compare-val green">Sparse graphs</span>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent2);margin-top:4px">
+          <div class="card-title">💡 Real-world tip</div>
+          <p>Adjacency List is used in almost all competitive programming and real-world applications (social networks, road maps) because real graphs are sparse — Facebook users average ~300 friends out of billions of possible connections.</p>
+        </div>
+      </div>
+
+      <!-- COMPLEXITY -->
+      <div class="section" id="complexity">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(255,209,102,.15)">⏱️</div>
+          <span class="section-title">Complexity Summary</span>
+        </div>
+        <table>
+          <tr>
+            <th>Operation</th>
+            <th>Adjacency Matrix</th>
+            <th>Adjacency List</th>
+          </tr>
+          <tr>
+            <td>Space</td>
+            <td class="ove">O(V²)</td>
+            <td class="green">O(V + E)</td>
+          </tr>
+          <tr>
+            <td>Build time</td>
+            <td class="ove">O(V²)</td>
+            <td class="green">O(V + E)</td>
+          </tr>
+          <tr>
+            <td>Edge lookup</td>
+            <td class="green">O(1)</td>
+            <td class="ov">O(degree(V))</td>
+          </tr>
+          <tr>
+            <td>Edge insert</td>
+            <td class="green">O(1)</td>
+            <td class="green">O(1) amortized</td>
+          </tr>
+          <tr>
+            <td>Edge delete</td>
+            <td class="green">O(1)</td>
+            <td class="ov">O(degree(V))</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- GLOSSARY -->
+      <div class="section" id="glossary">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(108,99,255,.15)">📖</div>
+          <span class="section-title">Key Terms</span>
+        </div>
+        <div class="def-grid">
+          <div class="def-item">
+            <div class="def-term">Vertex (V)</div>
+            <div class="def-desc">A node in the graph. Identified by a number (0 to V-1).</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Edge (E)</div>
+            <div class="def-desc">Connection between two vertices. Can have direction and/or weight.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Degree</div>
+            <div class="def-desc">Number of edges connected to a vertex. Directed: in-degree + out-degree.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Sparse Graph</div>
+            <div class="def-desc">Few edges relative to V². Prefer adjacency list.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">Dense Graph</div>
+            <div class="def-desc">Edges approach V². Adjacency matrix becomes viable.</div>
+          </div>
+          <div class="def-item">
+            <div class="def-term">In-degree</div>
+            <div class="def-desc">Edges coming IN to a node (directed graphs). High out, low in = spam node.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLASHCARDS TAB -->
+    <div id="tab-flashcards" class="tab-panel">
+      <div style="margin-bottom:16px;font-size:13px;color:var(--muted)">Click a card to reveal the answer</div>
+      <div class="flashcard-grid">
+        <div class="flashcard" onclick="this.classList.toggle('revealed')">
+          <div class="fc-q">What is the space complexity of an Adjacency Matrix?</div>
+          <div class="fc-a"><span class="fc-code">O(V²)</span> — stores V×V cells regardless of how many edges exist</div>
+          <div class="fc-hint">tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('revealed')">
+          <div class="fc-q">Why is Adjacency List preferred for sparse graphs?</div>
+          <div class="fc-a">Space is <span class="fc-code">O(V+E)</span> instead of <span class="fc-code">O(V²)</span>. Saves memory when E ≪ V².</div>
+          <div class="fc-hint">tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('revealed')">
+          <div class="fc-q">How do you add an undirected edge in an Adjacency Matrix?</div>
+          <div class="fc-a">Set both <span class="fc-code">mat[u][v] = 1</span> and <span class="fc-code">mat[v][u] = 1</span> (symmetric)</div>
+          <div class="fc-hint">tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('revealed')">
+          <div class="fc-q">What data type stores a weighted adjacency list?</div>
+          <div class="fc-a"><span class="fc-code">vector&lt;vector&lt;pair&lt;int,int&gt;&gt;&gt;</span> — each pair is {neighbor, weight}</div>
+          <div class="fc-hint">tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('revealed')">
+          <div class="fc-q">What makes a graph different from a tree?</div>
+          <div class="fc-a">Graphs can have cycles, multiple parents, any number of edges. Trees: n nodes, n-1 edges, no cycles.</div>
+          <div class="fc-hint">tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('revealed')">
+          <div class="fc-q">Time to check if edge (u,v) exists in adjacency matrix?</div>
+          <div class="fc-a"><span class="fc-code">O(1)</span> — just check <span class="fc-code">mat[u][v]</span></div>
+          <div class="fc-hint">tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('revealed')">
+          <div class="fc-q">What is in-degree in a directed graph?</div>
+          <div class="fc-a">Number of edges <strong>coming IN</strong> to a vertex. A node with very high out-degree and low in-degree could be a spam node.</div>
+          <div class="fc-hint">tap to reveal</div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('revealed')">
+          <div class="fc-q">Is the adjacency matrix symmetric for directed graphs?</div>
+          <div class="fc-a"><strong>No.</strong> Only mat[u][v] is set for edge u→v. mat[v][u] remains 0 unless there's a reverse edge.</div>
+          <div class="fc-hint">tap to reveal</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MINDMAP TAB -->
+    <div id="tab-mindmap" class="tab-panel">
+      <div class="mindmap">
+        <div style="text-align:center;margin-bottom:16px">
+          <div class="mm-center">Graph Representation</div>
+        </div>
+        <div class="mm-branches">
+          <div class="mm-branch">
+            <div class="mm-branch-title">📊 Adjacency Matrix</div>
+            <div class="mm-leaf">V×V 2D array</div>
+            <div class="mm-leaf">Space: O(V²)</div>
+            <div class="mm-leaf">Lookup: O(1)</div>
+            <div class="mm-leaf">Symmetric if undirected</div>
+            <div class="mm-leaf">Best: dense graphs</div>
+          </div>
+          <div class="mm-branch">
+            <div class="mm-branch-title">📋 Adjacency List</div>
+            <div class="mm-leaf">vector of vectors</div>
+            <div class="mm-leaf">Space: O(V+E)</div>
+            <div class="mm-leaf">Lookup: O(degree)</div>
+            <div class="mm-leaf">Pairs for weighted</div>
+            <div class="mm-leaf">Best: sparse graphs</div>
+          </div>
+          <div class="mm-branch">
+            <div class="mm-branch-title">🔀 Graph Types</div>
+            <div class="mm-leaf">Undirected / Directed</div>
+            <div class="mm-leaf">Weighted / Unweighted</div>
+            <div class="mm-leaf">In-degree / Out-degree</div>
+            <div class="mm-leaf">Sparse / Dense</div>
+          </div>
+          <div class="mm-branch">
+            <div class="mm-branch-title">🌳 Tree vs Graph</div>
+            <div class="mm-leaf">Tree: n nodes, n-1 edges</div>
+            <div class="mm-leaf">Tree: no cycles</div>
+            <div class="mm-leaf">Every tree is a graph</div>
+            <div class="mm-leaf">Not vice versa</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ TAB -->
+    <div id="tab-quiz" class="tab-panel">
+      <div id="quiz-container"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ── TABS ── */
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'quiz') initQuiz();
+}
+
+/* ── MATRIX INTERACTION ── */
+document.querySelectorAll('.cell[data-r]').forEach(cell => {
+  cell.addEventListener('click', () => {
+    const r = cell.dataset.r, c = cell.dataset.c;
+    const val = cell.textContent.trim();
+    const info = document.getElementById('cell-info');
+    if (val === '1') {
+      info.style.color = 'var(--accent2)';
+      info.textContent = `Edge exists between node ${r} and node ${c} ✓`;
+    } else {
+      info.style.color = 'var(--muted)';
+      info.textContent = `No edge between node ${r} and node ${c}`;
+    }
+  });
+});
+
+/* ── COPY CODE ── */
+function copyCode(btn) {
+  const code = btn.closest('.code-block').querySelector('pre').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function copyAll() {
+  const all = document.querySelectorAll('#tab-notes .keypoint-text, #tab-notes .card p');
+  const text = [...all].map(e => '• ' + e.innerText).join('\n');
+  navigator.clipboard.writeText('Graph Representation Notes\n\n' + text);
+  const btn = event.target;
+  btn.textContent = '✓ Copied!';
+  setTimeout(() => btn.textContent = '📋 Copy Notes', 1500);
+}
+
+/* ── LANG TOGGLE (demo) ── */
+let hindi = false;
+function toggleLang() {
+  hindi = !hindi;
+  document.getElementById('lang-btn').textContent = hindi ? '🌐 View in English' : '🌐 View in Hindi';
+  alert(hindi ? 'Hindi mode: In your real app, the AI prompt would force ENGLISH output — see the fix below!' : 'Back to English');
+}
+
+/* ── QUIZ ── */
+const questions = [
+  { q: 'What is the space complexity of Adjacency Matrix?', opts: ['O(V)', 'O(V+E)', 'O(V²)', 'O(E)'], ans: 2 },
+  { q: 'Which representation is best for a social network (sparse)?', opts: ['Adjacency Matrix', 'Adjacency List', 'Both equal', '2D Array'], ans: 1 },
+  { q: 'Time to check if edge (u,v) exists in Adjacency Matrix?', opts: ['O(V)', 'O(degree)', 'O(E)', 'O(1)'], ans: 3 },
+  { q: 'How many edges does a tree with n nodes have?', opts: ['n', 'n+1', 'n-1', 'n²'], ans: 2 },
+  { q: 'For weighted adjacency list, each element stores?', opts: ['Just vertex', 'pair(vertex, weight)', 'weight only', 'int array'], ans: 1 }
+];
+
+let quizState = { current: 0, score: 0, answered: [] };
+
+function initQuiz() {
+  quizState = { current: 0, score: 0, answered: Array(questions.length).fill(null) };
+  renderQuiz();
+}
+
+function renderQuiz() {
+  const c = document.getElementById('quiz-container');
+  const q = questions[quizState.current];
+  const progress = ((quizState.current) / questions.length * 100).toFixed(0);
+  c.innerHTML = `
+    <div style="margin-bottom:8px;font-size:12px;color:var(--muted)">Question ${quizState.current+1} of ${questions.length}</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${progress}%"></div></div>
+    <div class="card" style="margin-bottom:16px">
+      <div style="font-size:15px;font-weight:600;margin-bottom:16px">${q.q}</div>
+      ${q.opts.map((o, i) => `
+        <div onclick="answerQuiz(${i})" style="padding:10px 14px;margin:6px 0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;transition:all .15s"
+          onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          ${String.fromCharCode(65+i)}. ${o}
+        </div>`).join('')}
+    </div>`;
+}
+
+function answerQuiz(chosen) {
+  const q = questions[quizState.current];
+  const isCorrect = chosen === q.ans;
+  if (isCorrect) quizState.score++;
+  quizState.answered[quizState.current] = chosen;
+
+  const c = document.getElementById('quiz-container');
+  const opts = c.querySelectorAll('[onclick]');
+  opts.forEach((el, i) => {
+    el.style.cursor = 'default';
+    el.removeAttribute('onclick');
+    el.removeAttribute('onmouseover');
+    el.removeAttribute('onmouseout');
+    if (i === q.ans) { el.style.borderColor = 'var(--accent2)'; el.style.background = 'rgba(0,217,163,.1)'; }
+    if (i === chosen && !isCorrect) { el.style.borderColor = 'var(--accent3)'; el.style.background = 'rgba(255,107,107,.1)'; }
+  });
+
+  const next = document.createElement('button');
+  next.className = 'action-btn primary';
+  next.style.marginTop = '12px';
+  next.textContent = quizState.current < questions.length - 1 ? 'Next →' : 'See Results';
+  next.onclick = () => {
+    quizState.current++;
+    if (quizState.current < questions.length) renderQuiz();
+    else showResults();
+  };
+  c.appendChild(next);
+}
+
+function showResults() {
+  const pct = Math.round(quizState.score / questions.length * 100);
+  document.getElementById('quiz-container').innerHTML = `
+    <div class="card" style="text-align:center;padding:32px">
+      <div style="font-size:48px;font-weight:700;color:${pct>=80?'var(--accent2)':pct>=60?'var(--accent4)':'var(--accent3)'}">${pct}%</div>
+      <div style="font-size:16px;margin:8px 0;font-weight:600">${quizState.score}/${questions.length} correct</div>
+      <div style="color:var(--muted);font-size:13px;margin-bottom:20px">${pct>=80?'Excellent! You understand graph representation.':pct>=60?'Good. Review the complexity section.':'Review the notes and try again.'}</div>
+      <button class="action-btn primary" onclick="initQuiz()">Retake Quiz</button>
+    </div>`;
+}
+
+/* ── SCROLL SPY ── */
+const sections = ['intro','types','matrix','list','comparison','complexity','glossary'];
+const mainEl = document.getElementById('main-scroll') || window;
+window.addEventListener('scroll', () => {
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    if (rect.top < 200 && rect.bottom > 0) {
+      document.querySelectorAll('.toc-item').forEach(t => t.classList.remove('active'));
+      const toc = document.querySelector(`.toc-item[onclick="scrollTo('${id}')"]`);
+      if (toc) toc.classList.add('active');
+    }
+  });
+});
+
+function scrollTo(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Article metadata list
+const posts = [
+  {
+    title: "How to Take Notes from YouTube Videos (AI Method)",
+    description: "Learn the difference between active and passive learning, and how to utilize AI to instantly compile structured study notes from YouTube videos.",
+    slug: "how-to-take-notes-from-youtube-videos-ai-method",
+    date: "June 8, 2026",
+    readTime: "5 min read",
+    tag: "Productivity",
+    tagColor: "var(--color-accent-purple)"
+  },
+  {
+    title: "Best Free AI Tools for Students in 2026",
+    description: "An ultimate review of the top free artificial intelligence tools helping students write, summarize, map concepts, and pass exams in 2026.",
+    slug: "best-free-ai-tools-for-students-2026",
+    date: "June 5, 2026",
+    readTime: "6 min read",
+    tag: "Education",
+    tagColor: "var(--color-accent-blue)"
+  },
+  {
+    title: "How to Convert YouTube Lectures to PDF Notes Free",
+    description: "A complete step-by-step guide to converting complex university lectures on YouTube into well-formatted, printable study PDF sheets.",
+    slug: "how-to-convert-youtube-lectures-to-pdf-notes-free",
+    date: "May 29, 2026",
+    readTime: "4 min read",
+    tag: "Guides",
+    tagColor: "var(--color-accent-orange)"
+  }
+];
+---
+
+<BaseLayout
+  title="AI Note Taking Blog — YouTube to Notes AI"
+  description="Read the latest articles on active recall studying, AI notes generation, and how to learn faster from video content."
+>
+  <section class="section">
+    <div class="container" style="padding-top: var(--spacing-xl);">
+      <div style="text-align: center; margin-bottom: var(--spacing-3xl);">
+        <span class="eyebrow">BLOG & ARTICLES</span>
+        <h1 style="font-size: 44px; font-weight: 600; color: var(--color-ink); margin-bottom: 8px;">Study Tips & Guides</h1>
+        <p style="color: var(--color-body-mid); max-width: 520px; margin: 0 auto;">Master active learning, speed up note-taking, and utilize artificial intelligence to learn faster.</p>
+      </div>
+
+      <div class="blog-grid">
+        {posts.map(post => (
+          <article class="card card-feature blog-card">
+            <div class="blog-card-header">
+              <span class="badge" style={`background-color: ${post.tagColor}; color: white;`}>{post.tag}</span>
+              <span class="blog-meta-text">{post.date} &bull; {post.readTime}</span>
+            </div>
+            
+            <h2 class="blog-card-title">{post.title}</h2>
+            <p class="blog-card-desc">{post.description}</p>
+            
+            <a href={`/blog/${post.slug}`} class="btn btn-secondary blog-read-btn">
+              Read Article
+              <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-2xl);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .blog-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--spacing-2xl);
+  }
+
+  .blog-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .blog-meta-text {
+    font-size: 12.8px;
+    color: var(--color-mute);
+  }
+
+  .blog-card-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-ink);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.35;
+    flex-grow: 0;
+  }
+
+  .blog-card-desc {
+    font-size: 14px;
+    color: var(--color-body);
+    line-height: 1.5;
+    margin-bottom: var(--spacing-xl);
+    flex-grow: 1;
+  }
+
+  .blog-read-btn {
+    width: 100%;
+    margin-top: auto;
+  }
+
+  @media (max-width: 991px) {
+    .blog-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .blog-grid {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-xl);
+    }
+  }
+</style>

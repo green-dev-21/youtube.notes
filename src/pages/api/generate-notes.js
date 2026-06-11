@@ -473,27 +473,9 @@ export async function POST(context) {
     const groqTrimmedText = compressTranscriptRAG(cleanedText, 1800);
     const groqPrompt = buildPrompt(groqTrimmedText, language);
 
-    // 6. Get Gemini API Key (Dynamic import for cloudflare:workers with process.env fallback)
-    let geminiKey = customApiKey;
-    if (!geminiKey) {
-      try {
-        const cf = await import('cloudflare:workers');
-        geminiKey = cf.env.GEMINI_API_KEY;
-      } catch (e) {
-        geminiKey = process.env.GEMINI_API_KEY;
-      }
-    }
-
-    // Get Groq API Key (Dynamic import for cloudflare:workers with process.env fallback)
-    let groqKey = customGroqApiKey;
-    if (!groqKey) {
-      try {
-        const cf = await import('cloudflare:workers');
-        groqKey = cf.env.GROQ_API_KEY;
-      } catch (e) {
-        groqKey = process.env.GROQ_API_KEY;
-      }
-    }
+    // 6. Get API keys from environment variables
+    let geminiKey = customApiKey || process.env.GEMINI_API_KEY;
+    let groqKey = customGroqApiKey || process.env.GROQ_API_KEY;
 
     if (!geminiKey && !groqKey) {
       return new Response(JSON.stringify({ 
